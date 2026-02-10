@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -35,38 +36,29 @@ export function Navigation() {
   };
 
   return (
-    <nav className="border-b bg-white sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-24">
+          {/* Brand left */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900">
-              BorrowerEd
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/assets/brand.png"
+                alt="Brand"
+                width={250}
+                height={126}
+                className="object-contain"
+              />
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-gray-900',
-                  pathname === link.href
-                    ? 'text-gray-900'
-                    : 'text-gray-600'
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="hidden md:flex items-center space-x-4">
+          {/* User menu right */}
+          <div className="flex items-center justify-end space-x-3">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <User className="h-5 w-5" />
+                  <Button variant="ghost" size="icon" aria-label="user menu">
+                    <User className="h-5 w-5 text-gray-900" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -88,17 +80,18 @@ export function Navigation() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
+              <div className="flex items-center space-x-2">
                 <Button variant="ghost" asChild>
-                  <Link href="/login">Sign In</Link>
+                  <Link href="/login" className="text-gray-900">Sign In</Link>
                 </Button>
                 <Button asChild>
                   <Link href="/signup">Get Started</Link>
                 </Button>
-              </>
+              </div>
             )}
           </div>
 
+          {/* Mobile menu button */}
           <div className="md:hidden">
             <Button
               variant="ghost"
@@ -106,18 +99,41 @@ export function Navigation() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-6 w-6 text-gray-900" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 text-gray-900" />
               )}
             </Button>
           </div>
         </div>
       </div>
 
+      {/* Navigation bar below header - centered (green) */}
+      <nav className="border-t border-primary bg-primary">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center h-14">
+            <div className="hidden md:flex items-center space-x-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    'text-sm font-medium transition-colors hover:opacity-90',
+                    pathname === link.href ? 'text-primary-foreground' : 'text-primary-foreground/90'
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+        <div className="md:hidden border-t border-primary bg-primary">
+          <div className="px-2 pt-2 pb-3 space-y-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -125,8 +141,8 @@ export function Navigation() {
                 className={cn(
                   'block px-3 py-2 rounded-md text-base font-medium',
                   pathname === link.href
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-primary/80 text-primary-foreground'
+                    : 'text-primary-foreground/90 hover:bg-primary/90'
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -137,7 +153,7 @@ export function Navigation() {
               <>
                 <Link
                   href="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Dashboard
@@ -145,7 +161,7 @@ export function Navigation() {
                 {hasMembership && (
                   <Link
                     href="/member-area"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Member Area
@@ -153,14 +169,14 @@ export function Navigation() {
                 )}
                 <Link
                   href="/profile"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Profile
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50"
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                 >
                   Sign Out
                 </button>
@@ -169,14 +185,14 @@ export function Navigation() {
               <>
                 <Link
                   href="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-50"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground/90 hover:bg-primary/90"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/signup"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 bg-gray-100"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-primary-foreground bg-primary/80"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Get Started
@@ -186,6 +202,6 @@ export function Navigation() {
           </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

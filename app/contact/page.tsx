@@ -153,7 +153,7 @@ export default function ContactPage() {
                       <h3 className="font-semibold text-gray-900 mb-1">
                         Email
                       </h3>
-                      <p className="text-gray-600">contact@borrowered.com</p>
+                      <p className="text-gray-600">Ken@k2cfinance.com</p>
                     </div>
                   </div>
                 </CardContent>
@@ -169,7 +169,7 @@ export default function ContactPage() {
                       <h3 className="font-semibold text-gray-900 mb-1">
                         Phone
                       </h3>
-                      <p className="text-gray-600">(555) 123-4567</p>
+                      <p className="text-gray-600">(267) 549-5792</p>
                     </div>
                   </div>
                 </CardContent>
@@ -186,11 +186,11 @@ export default function ContactPage() {
                         Office
                       </h3>
                       <p className="text-gray-600">
-                        123 Business Street
+                        13 Goldeneye Ct
                         <br />
-                        Suite 100
+                        New Britain, PA
                         <br />
-                        Your City, ST 12345
+                        Pennsylvania
                       </p>
                     </div>
                   </div>

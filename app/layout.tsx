@@ -8,12 +8,12 @@ import { Footer } from '@/components/Footer';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'BorrowerEd - Financing Education Platform',
+  title: 'K2C - Financing Education Platform',
   description: 'Empowering borrowers with the knowledge and tools to secure financing and build successful businesses.',
   openGraph: {
     images: [
       {
-        url: 'https://bolt.new/static/og_default.png',
+        url: 'public/logo2.png',
       },
     ],
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     images: [
       {
-        url: 'https://bolt.new/static/og_default.png',
+        url: 'public/logo2.png',
       },
     ],
   },

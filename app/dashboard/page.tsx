@@ -86,7 +86,7 @@ export default function DashboardPage() {
   if (loading || !user) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="text-gray-600">Loading...</p>
+        <p className="text-primary/90">Loading...</p>
       </div>
     );
   }
@@ -98,7 +98,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900">
             Welcome back, {user.email?.split('@')[0]}!
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-primary/90 mt-2">
             Here's an overview of your learning journey
           </p>
         </div>
@@ -111,12 +111,12 @@ export default function DashboardPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Status</p>
+                    <p className="text-sm text-primary/90 mb-1">Status</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {hasMembership ? 'Member' : 'Free'}
                     </p>
                   </div>
-                  <Award className="h-12 w-12 text-slate-300" />
+                  <Award className="h-12 w-12 text-primary/90" />
                 </div>
               </CardContent>
             </Card>
@@ -125,12 +125,12 @@ export default function DashboardPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Purchases</p>
+                    <p className="text-sm text-primary/90 mb-1">Purchases</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {orders.length}
                     </p>
                   </div>
-                  <ShoppingBag className="h-12 w-12 text-slate-300" />
+                  <ShoppingBag className="h-12 w-12 text-primary/90" />
                 </div>
               </CardContent>
             </Card>
@@ -139,12 +139,12 @@ export default function DashboardPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Resources</p>
+                    <p className="text-sm text-primary/90 mb-1">Resources</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {hasMembership ? 'Unlimited' : 'Free'}
                     </p>
                   </div>
-                  <BookOpen className="h-12 w-12 text-slate-300" />
+                  <BookOpen className="h-12 w-12 text-primary/90" />
                 </div>
               </CardContent>
             </Card>
@@ -153,12 +153,12 @@ export default function DashboardPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Progress</p>
+                    <p className="text-sm text-primary/90 mb-1">Progress</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {hasMembership ? 'Active' : 'Getting Started'}
                     </p>
                   </div>
-                  <TrendingUp className="h-12 w-12 text-slate-300" />
+                  <TrendingUp className="h-12 w-12 text-primary/90" />
                 </div>
               </CardContent>
             </Card>
@@ -172,7 +172,7 @@ export default function DashboardPage() {
                     <h2 className="text-2xl font-bold mb-4">
                       Unlock Full Access
                     </h2>
-                    <p className="text-slate-300 mb-6">
+                    <p className="text-primary-foreground mb-6">
                       Join our membership program for exclusive content, live
                       Q&A sessions, and personalized guidance.
                     </p>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent>
                   {recentContent.length === 0 ? (
-                    <p className="text-gray-600">No content available yet.</p>
+                    <p className="text-primary/90">No content available yet.</p>
                   ) : (
                     <div className="space-y-4">
                       {recentContent.map((item) => (

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -19,15 +20,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Master Business Financing{' '}
-              <span className="text-slate-700">
-                With Expert Guidance
-              </span>
+              Fast Track Funding
+              <p className="text-2xl text-primary/90 mt-4">
+                <span className="text-slate-500">
+                  Rapid Results, Higher Returns.
+                </span>
+              </p>
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Get the knowledge, tools, and confidence to secure funding,
-              qualify for better terms, and build a thriving business. No more
-              guesswork.
+              Master Business Financing{' '}
+              With Expert Guidance
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="text-lg px-8 py-6">
@@ -40,7 +42,7 @@ export default function Home() {
                 size="lg"
                 variant="outline"
                 asChild
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-6 hover:bg-primary hover:text-slate-900"
               >
                 <Link href="/membership">
                   Join Membership
@@ -157,7 +159,13 @@ export default function Home() {
             </div>
             <div className="bg-white rounded-xl shadow-xl p-8 border-2 border-slate-200">
               <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center mb-6">
-                <BookOpen className="h-24 w-24 text-slate-400" />
+                <Image
+                  src="/assets/Lender_Logo.png"
+                  alt="Lender Logo"
+                  width={510}
+                  height={225}
+                  className="rounded-lg object-cover"
+                />
               </div>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -184,7 +192,13 @@ export default function Home() {
             <div className="order-2 lg:order-1">
               <div className="bg-slate-50 rounded-xl shadow-xl p-8 border-2 border-slate-200">
                 <div className="aspect-video bg-white rounded-lg flex items-center justify-center mb-6">
-                  <Award className="h-24 w-24 text-slate-400" />
+                  <Image
+                    src="/assets/Borrower_Logo.png"
+                    alt="Borrower Logo"
+                    width={510}
+                    height={225}
+                    className="rounded-lg object-cover"
+                  />
                 </div>
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold text-gray-900">
@@ -297,7 +311,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg" asChild>
+            <Button variant="outline" size="lg" asChild className='hover:bg-primary hover:text-slate-900'>
               <Link href="/content">
                 View All Free Content
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -321,15 +335,15 @@ export default function Home() {
               size="lg"
               variant="secondary"
               asChild
-              className="text-lg px-8 py-6"
+              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-slate-900"
             >
               <Link href="/workbook">Start With the Workbook</Link>
             </Button>
             <Button
               size="lg"
-              variant="outline"
+              variant="secondary"
               asChild
-              className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-slate-900"
+              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-slate-900"
             >
               <Link href="/membership">Explore Membership</Link>
             </Button>
