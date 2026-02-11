@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+
+const AUTH_SIDE_IMAGE =
+  "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1920&q=80";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -39,110 +42,163 @@ export default function SignupPage() {
     try {
       await signUp(email, password, fullName);
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Failed to create account');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            Create Your Account
-          </CardTitle>
-          <p className="text-center text-gray-600 mt-2">
-            Start your financing education journey today
+    <div className="w-full bg-white lg:grid lg:grid-cols-[75%_25%]">
+      <section
+        className="relative hidden min-h-[calc(100vh-13rem)] lg:flex items-center bg-neutral-800 px-16"
+        style={{
+          backgroundImage: `linear-gradient(rgba(23, 23, 23, 0.72), rgba(23, 23, 23, 0.72)), url('${AUTH_SIDE_IMAGE}')`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+        }}
+      >
+        <div className="max-w-lg text-white">
+          <p className="text-4xl font-semibold leading-tight">
+            K2 Commercial Finance Investor &amp; Business Loans
           </p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+          <div className="mt-6 h-0.5 w-32 bg-emerald-400" />
+          <p className="mt-6 text-base text-white/80">
+            Access the investor portal to review performance, documents, and
+            updates from the K2 Commercial Finance team.
+          </p>
+        </div>
+      </section>
 
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="John Doe"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
+      <section className="relative min-h-[calc(100vh-13rem)] bg-white px-6 py-10 shadow-xl sm:px-8">
+        <div className="absolute inset-x-0 top-8 z-10 flex justify-center">
+          <div className="flex flex-col items-center">
+            <Link href="/" className="inline-flex">
+              <Image
+                src="/assets/brand.jpg"
+                alt="K2 Commercial Finance"
+                width={160}
+                height={48}
+                className="h-auto w-60"
+                priority
               />
-            </div>
+            </Link>
+            <p className="mt-3 text-center text-xs font-semibold tracking-[0.2em] text-neutral-500">
+              INVESTOR PORTAL
+            </p>
+          </div>
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <p className="text-xs text-gray-500">
-                Must be at least 6 characters
+        <div className="flex min-h-[calc(100vh-13rem)] items-center justify-center">
+          <div className="w-full max-w-sm">
+            <div className="mt-8">
+              <h1 className="text-center text-xl font-semibold text-neutral-900">
+                Create your account
+              </h1>
+              <p className="mt-2 text-center text-sm text-neutral-500">
+                Start your financing education journey today
               </p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Create Account'}
-            </Button>
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-xs text-neutral-600">
+                  Full Name
+                </Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="John Doe"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+              </div>
 
-            <div className="text-center text-sm">
-              <span className="text-gray-600">Already have an account? </span>
-              <Link
-                href="/login"
-                className="font-medium text-gray-900 hover:underline"
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs text-neutral-600">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-xs text-neutral-600">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <p className="text-xs text-neutral-500">
+                  Must be at least 6 characters
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="confirmPassword"
+                  className="text-xs text-neutral-600"
+                >
+                  Confirm Password
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Creating account...' : 'Create Account'}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full border-neutral-300 text-neutral-700"
+                asChild
               >
-                Sign in
-              </Link>
-            </div>
+                <Link href="/login">Sign in</Link>
+              </Button>
 
-            <p className="text-xs text-gray-500 text-center">
-              By creating an account, you agree to our{' '}
-              <Link href="/terms" className="underline">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link href="/privacy" className="underline">
-                Privacy Policy
-              </Link>
-            </p>
-          </form>
-        </CardContent>
-      </Card>
+              <p className="text-xs text-neutral-500 text-center">
+                By creating an account, you agree to our{' '}
+                <Link href="/terms" className="underline hover:text-neutral-700">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="underline hover:text-neutral-700">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

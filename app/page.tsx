@@ -42,7 +42,7 @@ export default function Home() {
                 size="lg"
                 variant="outline"
                 asChild
-                className="text-lg px-8 py-6 hover:bg-primary hover:text-slate-900"
+                className="text-lg px-8 py-6 hover:bg-primary hover:text-primary-foreground"
               >
                 <Link href="/membership">
                   Join Membership
@@ -311,7 +311,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg" asChild className='hover:bg-primary hover:text-slate-900'>
+            <Button variant="outline" size="lg" asChild className='hover:bg-primary hover:text-primary-foreground'>
               <Link href="/content">
                 View All Free Content
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -335,7 +335,7 @@ export default function Home() {
               size="lg"
               variant="secondary"
               asChild
-              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-slate-900"
+              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-primary-foreground"
             >
               <Link href="/workbook">Start With the Workbook</Link>
             </Button>
@@ -343,7 +343,7 @@ export default function Home() {
               size="lg"
               variant="secondary"
               asChild
-              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-slate-900"
+              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-primary-foreground"
             >
               <Link href="/membership">Explore Membership</Link>
             </Button>

@@ -5,9 +5,17 @@ import {
   Award,
   TrendingUp,
   Users,
-  Target,
   CheckCircle2,
 } from 'lucide-react';
+
+const ABOUT_MISSION_IMAGE =
+  'https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=1600&q=80';
+const ABOUT_EXPERTISE_IMAGE =
+  'https://images.unsplash.com/photo-1758518729711-1cbacd55efdb?auto=format&fit=crop&w=1200&q=80';
+const ABOUT_HONESTY_IMAGE =
+  'https://images.pexels.com/photos/8729952/pexels-photo-8729952.jpeg?auto=compress&cs=tinysrgb&w=1200';
+const ABOUT_ACCESS_IMAGE =
+  'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=1200';
 
 export default function AboutPage() {
   return (
@@ -48,10 +56,12 @@ export default function AboutPage() {
                 real lending experience.
               </p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-8">
-              <div className="aspect-square bg-white rounded-lg flex items-center justify-center">
-                <Target className="h-32 w-32 text-slate-400" />
-              </div>
+            <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+              <div
+                className="aspect-square rounded-lg bg-cover bg-center"
+                style={{ backgroundImage: `url('${ABOUT_MISSION_IMAGE}')` }}
+                aria-label="Business strategy meeting"
+              />
             </div>
           </div>
         </div>
@@ -71,6 +81,11 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="border-2">
               <CardContent className="p-8">
+                <div
+                  className="mb-5 aspect-video rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url('${ABOUT_EXPERTISE_IMAGE}')` }}
+                  aria-label="Experts collaborating around financial reports"
+                />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <Award className="h-6 w-6 text-slate-700" />
                 </div>
@@ -86,6 +101,11 @@ export default function AboutPage() {
 
             <Card className="border-2">
               <CardContent className="p-8">
+                <div
+                  className="mb-5 aspect-video rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url('${ABOUT_HONESTY_IMAGE}')` }}
+                  aria-label="Business document review"
+                />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <CheckCircle2 className="h-6 w-6 text-slate-700" />
                 </div>
@@ -101,6 +121,11 @@ export default function AboutPage() {
 
             <Card className="border-2">
               <CardContent className="p-8">
+                <div
+                  className="mb-5 aspect-video rounded-lg bg-cover bg-center"
+                  style={{ backgroundImage: `url('${ABOUT_ACCESS_IMAGE}')` }}
+                  aria-label="Accessible digital learning workspace"
+                />
                 <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
                   <Users className="h-6 w-6 text-slate-700" />
                 </div>
@@ -164,7 +189,7 @@ export default function AboutPage() {
               size="lg"
               variant="outline"
               asChild
-              className="text-lg px-8 py-6 border-white text-white hover:bg-white hover:text-slate-900"
+              className="text-lg px-8 py-6 border-white hover:bg-primary hover:text-primary-foreground"
             >
               <Link href="/workbook">Get the Workbook</Link>
             </Button>

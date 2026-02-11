@@ -2,13 +2,59 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import {
-  BookOpen,
   CheckCircle2,
-  FileText,
   Download,
   Star,
   Shield,
 } from 'lucide-react';
+
+const WORKBOOK_HERO_IMAGE =
+  'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=1400';
+
+const WORKBOOK_FEATURES = [
+  {
+    title: 'Credit Analysis Framework',
+    description:
+      'Understand how lenders evaluate your credit, identify weaknesses, and create an action plan to improve your profile.',
+    image:
+      'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    title: 'Cash Flow Documentation System',
+    description:
+      'Learn what financial documents lenders require, how to organize them, and how to present your cash flow story effectively.',
+    image:
+      'https://images.pexels.com/photos/8729952/pexels-photo-8729952.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    title: 'Business Plan Templates',
+    description:
+      'Proven frameworks for creating business plans that lenders actually read and approve. Includes real examples.',
+    image:
+      'https://images.unsplash.com/photo-1758518729711-1cbacd55efdb?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Collateral Positioning Guide',
+    description:
+      'How to identify, value, and present collateral in a way that maximizes your borrowing capacity.',
+    image:
+      'https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    title: 'Application Checklists',
+    description:
+      'Complete checklists for SBA loans, term loans, lines of credit, and other common financing types.',
+    image:
+      'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+  {
+    title: 'Lender Comparison Worksheets',
+    description:
+      'Tools to evaluate different lenders, compare terms, and make informed decisions about where to apply.',
+    image:
+      'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=800',
+  },
+];
 
 export default function WorkbookPage() {
   return (
@@ -52,9 +98,11 @@ export default function WorkbookPage() {
               </p>
             </div>
             <div className="bg-white rounded-xl shadow-2xl p-8 border-2 border-slate-200">
-              <div className="aspect-[3/4] bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg flex items-center justify-center mb-6">
-                <BookOpen className="h-32 w-32 text-slate-400" />
-              </div>
+              <div
+                className="aspect-[3/4] rounded-lg mb-6 bg-cover bg-center"
+                style={{ backgroundImage: `url('${WORKBOOK_HERO_IMAGE}')` }}
+                aria-label="Workbook planning materials on desk"
+              />
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">Format</span>
@@ -91,45 +139,16 @@ export default function WorkbookPage() {
           </div>
 
           <div className="space-y-6">
-            {[
-              {
-                title: 'Credit Analysis Framework',
-                description:
-                  'Understand how lenders evaluate your credit, identify weaknesses, and create an action plan to improve your profile.',
-              },
-              {
-                title: 'Cash Flow Documentation System',
-                description:
-                  'Learn what financial documents lenders require, how to organize them, and how to present your cash flow story effectively.',
-              },
-              {
-                title: 'Business Plan Templates',
-                description:
-                  'Proven frameworks for creating business plans that lenders actually read and approve. Includes real examples.',
-              },
-              {
-                title: 'Collateral Positioning Guide',
-                description:
-                  'How to identify, value, and present collateral in a way that maximizes your borrowing capacity.',
-              },
-              {
-                title: 'Application Checklists',
-                description:
-                  'Complete checklists for SBA loans, term loans, lines of credit, and other common financing types.',
-              },
-              {
-                title: 'Lender Comparison Worksheets',
-                description:
-                  'Tools to evaluate different lenders, compare terms, and make informed decisions about where to apply.',
-              },
-            ].map((item, index) => (
+            {WORKBOOK_FEATURES.map((item, index) => (
               <Card key={index} className="border-2">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <FileText className="h-6 w-6 text-slate-700" />
-                    </div>
-                    <div>
+                    <div
+                      className="w-14 h-14 rounded-lg bg-cover bg-center flex-shrink-0 border border-slate-200"
+                      style={{ backgroundImage: `url('${item.image}')` }}
+                      aria-label={item.title}
+                    />
+                    <div className="min-w-0">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
                         {item.title}
                       </h3>

@@ -12,6 +12,57 @@ import {
   ArrowRight,
 } from 'lucide-react';
 
+const MEMBER_BENEFITS = [
+  {
+    title: 'Monthly Live Q&A',
+    description:
+      "Join monthly live sessions with lending experts. Ask questions, get personalized guidance, and learn from others' situations.",
+    icon: Calendar,
+    image:
+      'https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    title: 'Exclusive Video Library',
+    description:
+      'Access our growing library of advanced training videos, case studies, and deep-dive tutorials not available elsewhere.',
+    icon: Video,
+    image:
+      'https://images.pexels.com/photos/6801643/pexels-photo-6801643.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    title: 'Private Community',
+    description:
+      'Connect with other borrowers, share experiences, get feedback, and build relationships with like-minded entrepreneurs.',
+    icon: MessageSquare,
+    image:
+      'https://images.unsplash.com/photo-1758518729711-1cbacd55efdb?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    title: 'Document Review',
+    description:
+      'Submit your financial documents, business plans, and applications for expert review and actionable feedback.',
+    icon: FileCheck,
+    image:
+      'https://images.pexels.com/photos/8729952/pexels-photo-8729952.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    title: 'Workbook Included',
+    description:
+      'Get immediate access to the complete Borrower Preparation Workbook as part of your membership.',
+    icon: Award,
+    image:
+      'https://images.pexels.com/photos/7947656/pexels-photo-7947656.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    title: 'Priority Support',
+    description:
+      'Get faster responses to questions via email and priority access to new features and resources.',
+    icon: Users,
+    image:
+      'https://images.pexels.com/photos/6802042/pexels-photo-6802042.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+];
+
 export default function MembershipPage() {
   return (
     <div className="flex flex-col">
@@ -81,98 +132,26 @@ export default function MembershipPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-2">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <Calendar className="h-6 w-6 text-slate-700" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Monthly Live Q&A
-                </h3>
-                <p className="text-gray-600">
-                  Join monthly live sessions with lending experts. Ask
-                  questions, get personalized guidance, and learn from others'
-                  situations.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <Video className="h-6 w-6 text-slate-700" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Exclusive Video Library
-                </h3>
-                <p className="text-gray-600">
-                  Access our growing library of advanced training videos,
-                  case studies, and deep-dive tutorials not available
-                  elsewhere.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <MessageSquare className="h-6 w-6 text-slate-700" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Private Community
-                </h3>
-                <p className="text-gray-600">
-                  Connect with other borrowers, share experiences, get
-                  feedback, and build relationships with like-minded
-                  entrepreneurs.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <FileCheck className="h-6 w-6 text-slate-700" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Document Review
-                </h3>
-                <p className="text-gray-600">
-                  Submit your financial documents, business plans, and
-                  applications for expert review and actionable feedback.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <Award className="h-6 w-6 text-slate-700" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Workbook Included
-                </h3>
-                <p className="text-gray-600">
-                  Get immediate access to the complete Borrower Preparation
-                  Workbook as part of your membership.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-slate-700" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  Priority Support
-                </h3>
-                <p className="text-gray-600">
-                  Get faster responses to questions via email and priority
-                  access to new features and resources.
-                </p>
-              </CardContent>
-            </Card>
+            {MEMBER_BENEFITS.map((benefit) => (
+              <Card key={benefit.title} className="border-2 overflow-hidden">
+                <CardContent className="p-0">
+                  <div
+                    className="aspect-video bg-cover bg-center"
+                    style={{ backgroundImage: `url('${benefit.image}')` }}
+                    aria-label={benefit.title}
+                  />
+                  <div className="p-6">
+                    <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center mb-4">
+                      <benefit.icon className="h-6 w-6 text-slate-700" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-gray-600">{benefit.description}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
