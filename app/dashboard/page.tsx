@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
+import { AssistantDialog } from '@/components/assistant/AssistantDialog';
 import {
   BookOpen,
   Video,
@@ -28,11 +29,18 @@ type Order = {
   };
 };
 
+type Submission = {
+  id: string;
+  summary_text: string | null;
+  created_at: string;
+};
+
 export default function DashboardPage() {
   const { user, loading, hasMembership } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [recentContent, setRecentContent] = useState<any[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -45,6 +53,7 @@ export default function DashboardPage() {
       if (user) {
         await fetchOrders();
         await fetchRecentContent();
+        await fetchSubmissions();
       }
     })();
   }, [user]);
@@ -80,6 +89,33 @@ export default function DashboardPage() {
       setRecentContent(data || []);
     } catch (error) {
       console.error('Error fetching content:', error);
+    }
+  };
+
+  const fetchSubmissions = async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        return;
+      }
+
+      const response = await fetch('/api/submissions', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load submissions');
+      }
+
+      const data = (await response.json()) as { submissions?: Submission[] };
+      setSubmissions(data.submissions ?? []);
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
     }
   };
 
@@ -221,6 +257,57 @@ export default function DashboardPage() {
                   </Button>
                 </CardContent>
               </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Loan Package Submissions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {submissions.length === 0 ? (
+                    <div className="space-y-4">
+                      <p className="text-primary/90">
+                        No submissions yet. Start your first guided loan package
+                        intake.
+                      </p>
+                      <AssistantDialog
+                        triggerLabel="Open Loan Assistant"
+                        triggerVariant="default"
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {submissions.slice(0, 5).map((submission) => (
+                        <div
+                          key={submission.id}
+                          className="rounded-lg border p-3 text-sm"
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="font-semibold text-gray-900">
+                              {submission.summary_text
+                                ? 'Summary Generated'
+                                : 'Intake Saved'}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {new Date(
+                                submission.created_at
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <p className="mt-1 line-clamp-2 text-xs text-gray-600">
+                            {submission.summary_text ??
+                              'Summary not generated yet. Open assistant to continue.'}
+                          </p>
+                        </div>
+                      ))}
+                      <AssistantDialog
+                        triggerLabel="Start New Package"
+                        triggerVariant="outline"
+                        triggerClassName="w-full"
+                      />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             <div className="space-y-6">
@@ -237,6 +324,11 @@ export default function DashboardPage() {
                       <Link href="/workbook">Get Workbook</Link>
                     </Button>
                   )}
+                  <AssistantDialog
+                    triggerLabel="Loan Assistant"
+                    triggerVariant="outline"
+                    triggerClassName="w-full"
+                  />
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/profile">Edit Profile</Link>
                   </Button>

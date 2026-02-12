@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { AssistantLauncher } from '@/components/assistant/AssistantLauncher';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
           <div className="flex flex-col min-h-screen">
             <Navigation />
             <main className="flex-grow">{children}</main>
+            <AssistantLauncher />
             <Footer />
           </div>
         </AuthProvider>

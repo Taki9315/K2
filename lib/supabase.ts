@@ -86,6 +86,29 @@ export type Database = {
           updated_at: string;
         };
       };
+      submissions: {
+        Row: {
+          id: string;
+          user_id: string;
+          answers_json: Record<string, unknown>;
+          summary_text: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          answers_json: Record<string, unknown>;
+          summary_text?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          answers_json?: Record<string, unknown>;
+          summary_text?: string | null;
+          created_at?: string;
+        };
+      };
     };
   };
 };
