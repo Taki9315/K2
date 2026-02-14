@@ -19,7 +19,7 @@ import { Building2, BarChart3, Users } from 'lucide-react';
 
 // Placeholder – replace with your video URL when ready
 const CONTACT_VIDEO_URL =
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  'https://bigvu.tv/pages/kenkaplan/unlock-your-small-business-loan-successnwjvx1us';
 const WHO_WE_ARE_IMAGE =
   "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80";
 const FAQ_IMAGE =
@@ -127,10 +127,12 @@ export default function ContactPage() {
                   Partner with K2 Commercial Finance Video
                 </div>
                 <div className="aspect-video bg-black relative">
-                  <video className="w-full h-full object-contain" controls preload="metadata">
-                    <source src={CONTACT_VIDEO_URL} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <iframe
+                    src={CONTACT_VIDEO_URL}
+                    title="Partner with K2 Commercial Finance Video"
+                    className="w-full h-full"
+                    allowFullScreen
+                  />
                 </div>
                 <p className="px-4 py-2 text-sm text-white/70 bg-black border-t border-white/10">
                   Partner with K2 Commercial Finance Video by K2 Commercial Finance.

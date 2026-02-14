@@ -9,6 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const AUTH_SIDE_IMAGE =
   "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1920&q=80";
@@ -17,6 +24,7 @@ export default function SignupPage() {
   const router = useRouter();
   const { signUp } = useAuth();
   const [fullName, setFullName] = useState('');
+  const [role, setRole] = useState<'lender' | 'borrower' | ''>('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -37,10 +45,15 @@ export default function SignupPage() {
       return;
     }
 
+    if (!role) {
+      setError('Please select a role');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await signUp(email, password, fullName);
+      await signUp(email, password, fullName, role);
       router.push('/dashboard');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create account');
@@ -135,6 +148,24 @@ export default function SignupPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs text-neutral-600">Role</Label>
+                <Select
+                  value={role}
+                  onValueChange={(value) =>
+                    setRole(value as 'lender' | 'borrower')
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="lender">Lender</SelectItem>
+                    <SelectItem value="borrower">Borrower</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

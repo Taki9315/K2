@@ -9,9 +9,9 @@ import {
   Shield,
   CheckCircle2,
   ArrowRight,
-  PlayCircle,
   Award,
 } from 'lucide-react';
+import VideoCards from '@/components/VideoCards';
 
 export default function Home() {
   return (
@@ -266,49 +266,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Understanding Credit Scores',
-                type: 'Video',
-                duration: '12 min',
-              },
-              {
-                title: 'Cash Flow Documentation Guide',
-                type: 'Article',
-                duration: '8 min read',
-              },
-              {
-                title: 'Common Loan Application Mistakes',
-                type: 'Video',
-                duration: '15 min',
-              },
-            ].map((item, index) => (
-              <Card
-                key={index}
-                className="hover:shadow-lg transition-shadow cursor-pointer"
-              >
-                <CardContent className="p-0">
-                  <div className="aspect-video bg-slate-200 rounded-t-lg flex items-center justify-center">
-                    <PlayCircle className="h-16 w-16 text-slate-400" />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded">
-                        {item.type}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {item.duration}
-                      </span>
-                    </div>
-                    <h3 className="font-semibold text-gray-900">
-                      {item.title}
-                    </h3>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <VideoCards />
 
           <div className="text-center mt-12">
             <Button variant="outline" size="lg" asChild className='hover:bg-primary hover:text-primary-foreground'>

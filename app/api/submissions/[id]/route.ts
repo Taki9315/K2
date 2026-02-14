@@ -10,6 +10,18 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function isMissingSubmissionsTableError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const maybeError = error as { code?: string; message?: string };
+  return (
+    maybeError.code === 'PGRST205' &&
+    maybeError.message?.includes("public.submissions") === true
+  );
+}
+
 type RouteContext = {
   params: Promise<{
     id: string;
@@ -67,6 +79,16 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       .single();
 
     if (error || !data) {
+      if (isMissingSubmissionsTableError(error)) {
+        return NextResponse.json(
+          {
+            error:
+              'Submissions storage is not initialized. Apply Supabase migration 20260212070000_create_submissions.sql.',
+          },
+          { status: 503 }
+        );
+      }
+
       console.error('Failed to update submission:', error);
       return NextResponse.json(
         { error: 'Submission not found or update failed' },

@@ -10,6 +10,18 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function isMissingSubmissionsTableError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const maybeError = error as { code?: string; message?: string };
+  return (
+    maybeError.code === 'PGRST205' &&
+    maybeError.message?.includes("public.submissions") === true
+  );
+}
+
 export async function GET(request: Request) {
   try {
     const user = await getUserFromRequest(request);
@@ -25,6 +37,10 @@ export async function GET(request: Request) {
       .order('created_at', { ascending: false });
 
     if (error) {
+      if (isMissingSubmissionsTableError(error)) {
+        return NextResponse.json({ submissions: [] });
+      }
+
       console.error('Failed to fetch submissions:', error);
       return NextResponse.json(
         { error: 'Failed to fetch submissions' },
@@ -69,6 +85,16 @@ export async function POST(request: Request) {
       .single();
 
     if (error || !data) {
+      if (isMissingSubmissionsTableError(error)) {
+        return NextResponse.json(
+          {
+            error:
+              'Submissions storage is not initialized. Apply Supabase migration 20260212070000_create_submissions.sql.',
+          },
+          { status: 503 }
+        );
+      }
+
       console.error('Failed to create submission:', error);
       return NextResponse.json(
         { error: 'Failed to create submission' },
