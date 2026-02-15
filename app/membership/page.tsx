@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, BadgeCheck, Building2 } from 'lucide-react';
+import { ArrowRight, BadgeCheck, Building2, Wrench } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -8,7 +8,7 @@ const membershipPages = [
     title: 'K2 Preferred Lender',
     description:
       'A lender-focused page for partners, referral teams, and institutions seeking qualified borrower opportunities.',
-    href: '/lender',
+    href: '/membership/k2_preferred_lender',
     icon: Building2,
   },
   {
@@ -17,6 +17,13 @@ const membershipPages = [
       'A borrower-focused page that explains certification, readiness milestones, and a faster path to funding.',
     href: '/membership/certified-borrower',
     icon: BadgeCheck,
+  },
+  {
+    title: 'K2 Preferred Vendor',
+    description:
+      'A vendor-focused page for service providers seeking qualified referrals and lasting client relationships through the K2 network.',
+    href: '/membership/preferred-vendor',
+    icon: Wrench,
   },
 ];
 
@@ -36,7 +43,7 @@ export default function MembershipPage() {
 
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {membershipPages.map((page) => (
               <Card key={page.title} className="border-2 hover:shadow-lg transition-shadow">
                 <CardHeader>

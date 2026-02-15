@@ -15,36 +15,36 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { supabase } from '@/lib/supabase';
-import { Building2, BarChart3, Users } from 'lucide-react';
+import { Wrench, ShieldCheck, Handshake } from 'lucide-react';
 
 // Placeholder – replace with your video URL when ready
 const CONTACT_VIDEO_URL =
   'https://bigvu.tv/pages/kenkaplan/unlock-your-small-business-loan-successnwjvx1us';
 const WHO_WE_ARE_IMAGE =
-  "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80";
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1600&q=80";
 const FAQ_IMAGE =
-  "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80";
-const LENDER_STATS = [
-  { value: '23+', label: 'MARKETS' },
-  { value: '$970MM+', label: 'EQUITY INVESTED' },
-  { value: '$5.1B', label: 'TOTAL CAPITALIZATION' },
-  { value: '160+', label: 'PROPERTIES ACQUIRED' },
-  { value: '29,000+', label: 'UNITS ACQUIRED' },
-  { value: '700+', label: 'LENDER RELATIONSHIPS' },
-  { value: '2,400+', label: 'FUNDED BORROWERS' },
-  { value: '94%', label: 'CLIENT RETENTION' },
-  { value: '48H', label: 'AVG RESPONSE TIME' },
-  { value: '120+', label: 'INDUSTRY PARTNERS' },
-  { value: '$42B+', label: 'NETWORK CAPACITY' },
-  { value: '4.9/5', label: 'CLIENT RATING' },
+  "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1600&q=80";
+const VENDOR_STATS = [
+  { value: '23+', label: 'MARKETS SERVED' },
+  { value: '350+', label: 'ACTIVE VENDORS' },
+  { value: '$1.2B+', label: 'VENDOR VOLUME' },
+  { value: '160+', label: 'PROPERTIES SUPPORTED' },
+  { value: '29,000+', label: 'UNITS MANAGED' },
+  { value: '500+', label: 'VENDOR PARTNERSHIPS' },
+  { value: '1,800+', label: 'PROJECTS COMPLETED' },
+  { value: '96%', label: 'VENDOR SATISFACTION' },
+  { value: '24H', label: 'AVG RESPONSE TIME' },
+  { value: '80+', label: 'SERVICE CATEGORIES' },
+  { value: '$28B+', label: 'NETWORK CAPACITY' },
+  { value: '4.8/5', label: 'PARTNER RATING' },
 ];
-const LENDER_COLUMNS = [
-  LENDER_STATS.filter((_, i) => i % 3 === 0),
-  LENDER_STATS.filter((_, i) => i % 3 === 1),
-  LENDER_STATS.filter((_, i) => i % 3 === 2),
+const VENDOR_COLUMNS = [
+  VENDOR_STATS.filter((_, i) => i % 3 === 0),
+  VENDOR_STATS.filter((_, i) => i % 3 === 1),
+  VENDOR_STATS.filter((_, i) => i % 3 === 2),
 ];
 
-export default function ContactPage() {
+export default function PreferredVendorPage() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -76,7 +76,7 @@ export default function ContactPage() {
       const { error: submitError } = await supabase
         .from('contact_inquiries')
         .insert({
-          type: 'general',
+          type: 'vendor',
           name: fullName || '—',
           email: formData.email,
           message: messageWithMeta || '—',
@@ -116,7 +116,7 @@ export default function ContactPage() {
 
   return (
     <div className="flex flex-col">
-      {/* Section 1: Video + Form (Photo 1) */}
+      {/* Section 1: Video + Form */}
       <section className="bg-white py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -124,18 +124,18 @@ export default function ContactPage() {
             <div className="space-y-6">
               <div className="bg-black rounded-xl overflow-hidden shadow-xl">
                 <div className="px-4 py-2 bg-black text-white text-sm font-medium border-b border-white/10">
-                  Partner with K2 Commercial Finance Video
+                  Join the K2 Preferred Vendor Network
                 </div>
                 <div className="aspect-video bg-black relative">
                   <iframe
                     src={CONTACT_VIDEO_URL}
-                    title="Partner with K2 Commercial Finance Video"
+                    title="Join the K2 Preferred Vendor Network"
                     className="w-full h-full"
                     allowFullScreen
                   />
                 </div>
                 <p className="px-4 py-2 text-sm text-white/70 bg-black border-t border-white/10">
-                  Partner with K2 Commercial Finance Video by K2 Commercial Finance.
+                  Become a K2 Preferred Vendor — learn how our network works.
                 </p>
               </div>
 
@@ -168,16 +168,17 @@ export default function ContactPage() {
             {/* Right: Heading + Form */}
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-                Maximize Your Financing Success
+                Grow Your Business with K2 Referrals
               </h2>
               <p className="text-neutral-700 mb-4 leading-relaxed">
-                Partner with a team that delivers more than just capital—we drive results.
-                From borrower education and preparation to competitive terms and ongoing
-                support, we deliver outcomes that create lasting value.
+                Join a curated network of trusted vendors serving commercial real
+                estate borrowers and investors. As a K2 Preferred Vendor you gain
+                direct exposure to qualified deal flow and lasting client
+                relationships.
               </p>
               <p className="text-neutral-700 mb-8 leading-relaxed">
-                Share your information today and discover how K2 Commercial Finance can
-                support your business financing goals.
+                Share your information today and discover how the K2 Preferred
+                Vendor program can expand your reach and revenue.
               </p>
 
               <div className="rounded-2xl border border-black/10 bg-white p-6 md:p-8 shadow-sm">
@@ -185,7 +186,7 @@ export default function ContactPage() {
                   {success && (
                     <Alert>
                       <AlertDescription>
-                        Thank you for your message! We&apos;ll get back to you soon.
+                        Thank you for your interest! We&apos;ll review your application and get back to you soon.
                       </AlertDescription>
                     </Alert>
                   )}
@@ -273,12 +274,12 @@ export default function ContactPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="message" className="text-black">
-                      Tell us more about your financing needs or business
+                      Tell us about the services you provide
                     </Label>
                     <Textarea
                       id="message"
                       name="message"
-                      placeholder="Tell us more about your portfolio or property."
+                      placeholder="Describe your services, specialties, and service areas."
                       rows={5}
                       value={formData.message}
                       onChange={handleChange}
@@ -289,7 +290,7 @@ export default function ContactPage() {
 
                   <div className="space-y-2">
                     <p className="text-sm text-black">
-                      Submit your RFP to K2 Commercial Finance:
+                      Attach your company overview or capabilities deck:
                     </p>
                     <input
                       ref={fileInputRef}
@@ -308,7 +309,7 @@ export default function ContactPage() {
                   </div>
 
                   <Button type="submit" size="lg" disabled={loading} className="w-full sm:w-auto">
-                    {loading ? 'Sending...' : 'Send Message'}
+                    {loading ? 'Sending...' : 'Apply Now'}
                   </Button>
                 </form>
               </div>
@@ -325,26 +326,28 @@ export default function ContactPage() {
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url('${WHO_WE_ARE_IMAGE}')` }}
-                aria-label="K2 Commercial Finance team meeting"
+                aria-label="K2 Commercial Finance vendor collaboration"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-black mb-6">Who We Are</h2>
+              <h2 className="text-3xl font-bold text-black mb-6">Why Join the Preferred Vendor Network?</h2>
               <p className="text-neutral-700 mb-4 leading-relaxed">
-                K2 Commercial Finance is an education-first financing platform built to
-                help borrowers and investors make better decisions. We bring a lender&apos;s
-                perspective to the process—driving clarity, preparation, and measurable
-                results.
+                K2 Commercial Finance connects borrowers and investors with
+                best-in-class service providers. Our Preferred Vendor program
+                gives you a direct channel to qualified clients who are actively
+                pursuing commercial real estate transactions.
               </p>
               <p className="text-neutral-700 mb-4 leading-relaxed">
-                Our team combines real lending experience with a commitment to
-                transparency. We&apos;ve supported businesses across multiple markets with
-                practical guidance on credit, cash flow, and loan readiness.
+                Whether you provide appraisals, environmental reports, insurance,
+                legal counsel, construction management, or other essential
+                services, being a Preferred Vendor positions you as a trusted
+                partner in every deal.
               </p>
               <p className="text-neutral-700 mb-6 leading-relaxed">
-                From first-time applicants to experienced borrowers, we help you prepare
-                with the precision that leads to better terms and faster approvals.
+                We vet every vendor in our network so borrowers and lenders can
+                move faster with confidence—and your pipeline stays full with
+                high-quality referrals.
               </p>
 
               <h2 className="text-3xl font-bold text-black mb-6 mt-10">
@@ -353,16 +356,16 @@ export default function ContactPage() {
               <ul className="space-y-4">
                 {[
                   {
-                    title: 'Education-first approach',
-                    text: 'We focus on helping you understand what lenders look for and how to position your business before you apply.',
+                    title: 'Curated network',
+                    text: 'Only vetted, qualified vendors are included—ensuring credibility and trust for every referral.',
                   },
                   {
-                    title: 'Practical resources',
-                    text: 'Workbooks, checklists, and content based on real lending criteria—no theory, just actionable steps.',
+                    title: 'Direct deal access',
+                    text: 'Get connected to borrowers and investors at the point of need, not through cold outreach.',
                   },
                   {
-                    title: 'Ongoing support',
-                    text: 'Membership and resources designed to support you through the entire financing journey.',
+                    title: 'Ongoing visibility',
+                    text: 'Your services are featured within the K2 ecosystem, keeping you top-of-mind for every transaction.',
                   },
                 ].map((item, i) => (
                   <li key={i}>
@@ -387,7 +390,7 @@ export default function ContactPage() {
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url('${FAQ_IMAGE}')` }}
-                aria-label="Client meeting and consultation"
+                aria-label="Vendor partnership consultation"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
             </div>
@@ -396,24 +399,24 @@ export default function ContactPage() {
               <Accordion type="single" collapsible className="w-full text-white">
                 {[
                   {
-                    q: 'What makes K2 different from other financing education resources?',
-                    a: 'We focus on practical, lender-based guidance—what underwriters actually look for—backed by real experience. Our workbook and content are built to improve your readiness and terms, not just general advice.',
+                    q: 'What types of vendors can join the Preferred Vendor network?',
+                    a: 'We welcome appraisers, environmental consultants, insurance providers, attorneys, title companies, construction managers, property inspectors, and other professionals that serve commercial real estate transactions.',
                   },
                   {
-                    q: 'Who is the workbook and membership for?',
-                    a: 'Entrepreneurs and business owners preparing for loans, those who have been rejected and want to understand why, and anyone who wants to navigate SBA or commercial lending with confidence.',
+                    q: 'Is there a cost to become a Preferred Vendor?',
+                    a: 'Our vendor program is structured to align interests. Contact us to learn about the current partnership terms and any associated fees.',
                   },
                   {
-                    q: 'How does the membership work?',
-                    a: 'Members get access to monthly Q&A sessions, exclusive content, and direct support to help you prepare documents and applications effectively.',
+                    q: 'How are vendors matched with clients?',
+                    a: 'We match vendors based on service category, geography, deal type, and track record. Our goal is to connect you with clients where your expertise is the best fit.',
                   },
                   {
-                    q: 'Do you provide loans or funding?',
-                    a: 'We provide education and preparation resources. We help you get ready to approach lenders and improve your chances of approval and better terms.',
+                    q: 'What is the vetting process?',
+                    a: 'We review your credentials, client references, service history, and licensing to ensure quality and reliability for our borrower and lender network.',
                   },
                   {
                     q: 'How do I get started?',
-                    a: 'Start with our free content or the Borrower Preparation Workbook for a step-by-step guide. For ongoing support, consider our membership program.',
+                    a: 'Fill out the application form on this page with your contact details and a description of your services. Our team will review and follow up within 48 hours.',
                   },
                 ].map((faq, i) => (
                   <AccordionItem key={i} value={`faq-${i}`} className="border-white/20">
@@ -431,19 +434,19 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Section 4: Best Lender Networks + Our Expertise */}
+      {/* Section 4: Vendor Network Stats + Our Expertise */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-black mb-4 text-center">
-            Best Lender Networks
+            Preferred Vendor Network
           </h2>
           <p className="text-center text-neutral-600 mb-12 max-w-3xl mx-auto">
-            Our network performance is backed by proven outcomes across markets,
-            borrower profiles, and lending programs.
+            Our vendor network powers the full lifecycle of commercial real
+            estate deals—from due diligence to closing and beyond.
           </p>
 
           <div className="hidden md:grid md:grid-cols-3 gap-6 mb-16">
-            {LENDER_COLUMNS.map((column, colIndex) => (
+            {VENDOR_COLUMNS.map((column, colIndex) => (
               <div
                 key={colIndex}
                 className="hex-vertical-track h-[560px] rounded-2xl border border-primary/20 bg-primary/[0.04] p-4"
@@ -467,7 +470,7 @@ export default function ContactPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden mb-16">
-            {LENDER_STATS.map((stat) => (
+            {VENDOR_STATS.map((stat) => (
               <div key={stat.label} className="hex-card mx-auto">
                 <div className="hex-card-inner">
                   <div className="text-xl font-bold text-black leading-none">
@@ -487,40 +490,41 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Building2 className="h-6 w-6 text-primary" />
+                <Wrench className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-bold text-black mb-3">
-                Preparation & Documentation Support
+                Full-Service Vendor Coverage
               </h3>
               <p className="text-neutral-700 text-sm leading-relaxed">
-                We help you build credit narratives, cash flow documentation, and
-                application packages that meet lender expectations—so you present your
-                business in the best light.
+                From appraisals and environmental assessments to insurance, legal,
+                and construction management—we connect borrowers with the right
+                professionals at every stage.
               </p>
             </div>
             <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <BarChart3 className="h-6 w-6 text-primary" />
+                <ShieldCheck className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-bold text-black mb-3">
-                Lender Expectations & Better Terms
+                Vetted Quality & Reliability
               </h3>
               <p className="text-neutral-700 text-sm leading-relaxed">
-                Understand how lenders evaluate applications and what drives approvals
-                and pricing. Position yourself for competitive terms and faster
-                decisions.
+                Every Preferred Vendor is reviewed for credentials, track record,
+                and responsiveness—so borrowers and lenders can move forward with
+                confidence.
               </p>
             </div>
             <div className="bg-white rounded-xl p-8 shadow-sm border border-black/10">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-primary" />
+                <Handshake className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-lg font-bold text-black mb-3">
-                Ongoing Education & Member Support
+                Built-In Deal Flow & Partnerships
               </h3>
               <p className="text-neutral-700 text-sm leading-relaxed">
-                From workbooks to live Q&A and member resources, we support you through
-                the full financing journey with clear, actionable guidance.
+                Preferred Vendors gain ongoing exposure to active deals and
+                client referrals through the K2 ecosystem—growing your business
+                alongside ours.
               </p>
             </div>
           </div>
