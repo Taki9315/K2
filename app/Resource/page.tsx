@@ -416,13 +416,13 @@ export default function ResourcePage() {
       </section>
 
       {!hasMembership && (
-        <section className="border-t bg-slate-50 py-16">
+        <section className="border-t bg-slate-900 text-white py-16">
           <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <Crown className="mx-auto h-10 w-10 text-amber-500" />
-            <h2 className="mt-4 text-2xl font-bold text-gray-900 sm:text-3xl">
+            <h2 className="mt-4 text-3xl font-bold text-white sm:text-3xl">
               Unlock the Full Library
             </h2>
-            <p className="mt-3 text-gray-600">
+            <p className="mt-3 text-white">
               Members get access to every workbook, video, and article in the
               resource library — plus live Q&amp;A sessions, direct support, and
               early access to new content.

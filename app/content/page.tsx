@@ -218,12 +218,12 @@ export default function ContentHubPage() {
         </div>
       </section>
 
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-slate-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl font-bold text-white mb-6">
             Want More Advanced Content?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-white mb-8">
             Join our membership program for exclusive videos, live Q&A sessions,
             and personalized guidance.
           </p>

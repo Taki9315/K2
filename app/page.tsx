@@ -152,11 +152,12 @@ export default function Home() {
               </p>
               <ul className="space-y-4 mb-8">
                 {[
-                  'Credit analysis and improvement strategies',
-                  'Cash flow documentation best practices',
-                  'Business plan frameworks that lenders approve',
-                  'Collateral positioning and presentation',
-                  'Application checklists and timelines',
+                  'Preparing for Financing Success',
+                  'Understanding and Selecting the loan program best suited for your unique situation',
+                  'Finding the right lender - hint...it may not be your local bank',
+                  'Navigating Underwriting and Closing your deal.',
+                  'Document Vault - All the forms a lender may request available for instant download.',
+                  'Lender Comparison Worksheets',
                 ].map((feature) => (
                   <li key={feature} className="flex items-start">
                     <CheckCircle2 className="h-6 w-6 text-green-600 mr-3 flex-shrink-0 mt-0.5" />
