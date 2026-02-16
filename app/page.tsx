@@ -16,7 +16,7 @@ import VideoCards from '@/components/VideoCards';
 export default function Home() {
   return (
     <div className="flex flex-col">
-      <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-16 md:py-24">
+      <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -28,11 +28,14 @@ export default function Home() {
                   </span>
                 </p>
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-xl text-gray-600 mb-4 leading-relaxed">
                 Master Business Financing{' '}
                 With Expert Guidance
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <p className="text-lg text-gray-700 mb-8 leading-relaxed italic">
+                &ldquo;This $14.95 Success Kit will position you as a borrower the Banks will WANT to work with - and your transaction as one they will want to fund.&rdquo;
+              </p>
+              {/* <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
                   variant="outline"
@@ -44,10 +47,10 @@ export default function Home() {
                     <Users className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-              </div>
-              <p className="text-sm text-gray-500 mt-4">
+              </div> */}
+              {/* <p className="text-sm text-gray-500 mt-4">
                 Trusted by entrepreneurs and borrowers nationwide
-              </p>
+              </p> */}
             </div>
 
             <div className="relative flex justify-center lg:justify-end">
