@@ -14,14 +14,14 @@ const membershipPages = [
   {
     title: 'K2 Preferred Lender',
     description:
-      'A lender-focused page for partners, referral teams, and institutions seeking qualified borrower opportunities.',
-    href: '/membership/k2_preferred_lender',
+      'A lender-focused network for partners, referral teams, and institutions seeking qualified borrower opportunities.',
+    href: '/membership/k2-preferred-lender',
     icon: Building2,
   },
   {
     title: 'K2 CRE Preferred Vendor',
     description:
-      'A vendor-focused page for service providers seeking qualified referrals and lasting client relationships through the K2 network.',
+      'A vendor-focused network for service providers seeking qualified referrals and lasting client relationships through K2.',
     href: '/membership/preferred-vendor',
     icon: Wrench,
   },

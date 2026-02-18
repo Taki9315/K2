@@ -12,6 +12,7 @@ import {
 type QuestionInputProps = {
   question: AssistantQuestion;
   disabled?: boolean;
+  compact?: boolean;
   onSubmit: (value: AnswerValue) => Promise<void> | void;
   onSkip?: () => void;
 };
@@ -19,6 +20,7 @@ type QuestionInputProps = {
 export function QuestionInput({
   question,
   disabled = false,
+  compact = false,
   onSubmit,
   onSkip,
 }: QuestionInputProps) {
@@ -69,8 +71,12 @@ export function QuestionInput({
   };
 
   if (question.type === 'choice' && question.options?.length) {
-    const cols =
-      question.options.length > 6 ? 'sm:grid-cols-3' : 'sm:grid-cols-2';
+    const count = question.options.length;
+    const cols = compact
+      ? 'grid-cols-2'
+      : count > 6
+        ? 'grid-cols-2 sm:grid-cols-3'
+        : 'grid-cols-1 sm:grid-cols-2';
 
     return (
       <div className="space-y-2">
@@ -80,7 +86,7 @@ export function QuestionInput({
               key={option}
               type="button"
               variant="outline"
-              className="justify-start text-left"
+              className="h-auto min-h-[2.5rem] justify-start whitespace-normal text-left py-2 text-xs sm:text-sm"
               onClick={() => submitChoice(option)}
               disabled={disabled || submitting}
             >

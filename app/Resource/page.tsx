@@ -46,7 +46,7 @@ const resources: Resource[] = [
     title: 'LivePlan — Business Plan Software',
     description:
       'Lenders want a professional business plan — LivePlan builds one for you. Its AI-powered platform creates lender-ready financials, cash flow forecasts, and SBA-approved documents in a fraction of the time it takes with spreadsheets. Trusted by over 1 million entrepreneurs, this is the fastest way to present your business like a bankable borrower.',
-    href: 'https://liveplan.advocate.impact.com/login',
+    href: 'https://ssqt.co/mQLMnXG',
     external: true,
     iframeable: false,
     icon: <FileSpreadsheet className="h-6 w-6" />,

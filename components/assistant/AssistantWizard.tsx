@@ -142,7 +142,11 @@ function getAutoMessages(questionId: string, answers: Answers): string[] {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-export function AssistantWizard() {
+type AssistantWizardProps = {
+  compact?: boolean;
+};
+
+export function AssistantWizard({ compact = false }: AssistantWizardProps) {
   const { user } = useAuth();
 
   const [mode, setMode] = useState<WizardMode>('greeting');
@@ -670,7 +674,7 @@ export function AssistantWizard() {
       });
 
       const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -684,6 +688,162 @@ export function AssistantWizard() {
 
   /* ---------- Render --------------------------------------------- */
 
+  const statusText =
+    mode === 'greeting'
+      ? 'Choose an option below to get started.'
+      : mode === 'freeform'
+        ? 'Ask any financing question.'
+        : mode === 'intake'
+          ? 'One question at a time. Your answers are saved automatically.'
+          : 'Your intake is complete.';
+
+  const greetingBlock = mode === 'greeting' && (
+    <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
+      <Button
+        variant="outline"
+        className={compact ? 'justify-start gap-2 py-4 text-left text-sm' : 'justify-start gap-2 py-6 text-left'}
+        onClick={() => handleGreetingChoice('freeform')}
+      >
+        <MessageSquare className="h-5 w-5 shrink-0 text-primary" />
+        <div>
+          <div className="font-semibold">Ask a Financing Question</div>
+          {!compact && (
+            <div className="text-xs text-slate-500">
+              Get quick guidance on commercial lending
+            </div>
+          )}
+        </div>
+      </Button>
+      <Button
+        variant="outline"
+        className={compact ? 'justify-start gap-2 py-4 text-left text-sm' : 'justify-start gap-2 py-6 text-left'}
+        onClick={() => handleGreetingChoice('intake')}
+      >
+        <ClipboardList className="h-5 w-5 shrink-0 text-primary" />
+        <div>
+          <div className="font-semibold">Start Deal Intake</div>
+          {!compact && (
+            <div className="text-xs text-slate-500">
+              Submit a deal for analysis
+            </div>
+          )}
+        </div>
+      </Button>
+    </div>
+  );
+
+  const freeformBlock = mode === 'freeform' && (
+    <div className="space-y-3">
+      <form onSubmit={handleFreeformSubmit} className="flex gap-2">
+        <Input
+          value={freeformInput}
+          onChange={(e) => setFreeformInput(e.target.value)}
+          placeholder="Type your financing question..."
+          disabled={isAskingAI}
+        />
+        <Button type="submit" disabled={isAskingAI || !freeformInput.trim()}>
+          {isAskingAI ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Bot className="h-4 w-4" />
+          )}
+        </Button>
+      </form>
+      {!isAskingAI && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs text-primary"
+          onClick={() => handleGreetingChoice('intake')}
+        >
+          <ClipboardList className="mr-1 h-3 w-3" />
+          Switch to Deal Intake
+        </Button>
+      )}
+    </div>
+  );
+
+  const intakeBlock = mode === 'intake' && currentQuestion && (
+    <QuestionInput
+      question={currentQuestion}
+      onSubmit={handleAnswerSubmit}
+      onSkip={currentQuestion.optional ? handleSkip : undefined}
+      disabled={isSavingDraft || isGeneratingSummary}
+      compact={compact}
+    />
+  );
+
+  const completeBlock = mode === 'complete' && (
+    <div className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
+      <p className="text-sm text-slate-600">
+        Intake complete. Generate your executive summary now.
+      </p>
+      <Button
+        type="button"
+        onClick={handleGenerateSummary}
+        disabled={isGeneratingSummary || isSavingDraft}
+      >
+        {isGeneratingSummary ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Generating...
+          </>
+        ) : (
+          <>
+            <Sparkles className="mr-2 h-4 w-4" />
+            Generate Executive Summary
+          </>
+        )}
+      </Button>
+    </div>
+  );
+
+  const savingIndicator = isSavingDraft && (
+    <div className="flex items-center text-sm text-slate-500">
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      Saving intake answers...
+    </div>
+  );
+
+  const summaryBlock = summaryText && (
+    <SummaryView
+      summaryText={summaryText}
+      checklist={checklist}
+      onDownloadPdf={handleDownloadPdf}
+      onSaveSubmission={handleSaveSubmission}
+      savingSubmission={isSavingSubmission}
+      isSaved={submissionSaved}
+    />
+  );
+
+  /* --- Compact layout (floating panel) --- */
+  if (compact) {
+    return (
+      <div className="flex flex-col gap-3">
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-xs">{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {(mode === 'intake' || mode === 'complete') && (
+          <ProgressBar current={completedQuestions} total={totalQuestions} />
+        )}
+
+        <ChatWindow messages={messages} />
+
+        {greetingBlock}
+        {freeformBlock}
+        {intakeBlock}
+        {completeBlock}
+        {savingIndicator}
+        {summaryBlock}
+      </div>
+    );
+  }
+
+  /* --- Full layout (dialog / standalone) --- */
   return (
     <div className="space-y-4">
       {error && (
@@ -697,15 +857,7 @@ export function AssistantWizard() {
         <CardHeader className="space-y-4">
           <div className="space-y-1">
             <CardTitle className="text-xl">K2 Deal Intake Assistant</CardTitle>
-            <CardDescription>
-              {mode === 'greeting'
-                ? 'Choose an option below to get started.'
-                : mode === 'freeform'
-                  ? 'Ask any financing question.'
-                  : mode === 'intake'
-                    ? 'One question at a time. Your answers are saved automatically.'
-                    : 'Your intake is complete.'}
-            </CardDescription>
+            <CardDescription>{statusText}</CardDescription>
           </div>
           {(mode === 'intake' || mode === 'complete') && (
             <ProgressBar current={completedQuestions} total={totalQuestions} />
@@ -714,130 +866,15 @@ export function AssistantWizard() {
 
         <CardContent className="space-y-4">
           <ChatWindow messages={messages} />
-
-          {/* --- Greeting ----------------------------------------- */}
-          {mode === 'greeting' && (
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Button
-                variant="outline"
-                className="justify-start gap-2 py-6 text-left"
-                onClick={() => handleGreetingChoice('freeform')}
-              >
-                <MessageSquare className="h-5 w-5 shrink-0 text-primary" />
-                <div>
-                  <div className="font-semibold">Ask a Financing Question</div>
-                  <div className="text-xs text-slate-500">
-                    Get quick guidance on commercial lending
-                  </div>
-                </div>
-              </Button>
-              <Button
-                variant="outline"
-                className="justify-start gap-2 py-6 text-left"
-                onClick={() => handleGreetingChoice('intake')}
-              >
-                <ClipboardList className="h-5 w-5 shrink-0 text-primary" />
-                <div>
-                  <div className="font-semibold">Start Deal Intake</div>
-                  <div className="text-xs text-slate-500">
-                    Submit a deal for analysis
-                  </div>
-                </div>
-              </Button>
-            </div>
-          )}
-
-          {/* --- Freeform ----------------------------------------- */}
-          {mode === 'freeform' && (
-            <div className="space-y-3">
-              <form
-                onSubmit={handleFreeformSubmit}
-                className="flex gap-2"
-              >
-                <Input
-                  value={freeformInput}
-                  onChange={(e) => setFreeformInput(e.target.value)}
-                  placeholder="Type your financing question..."
-                  disabled={isAskingAI}
-                />
-                <Button type="submit" disabled={isAskingAI || !freeformInput.trim()}>
-                  {isAskingAI ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Bot className="h-4 w-4" />
-                  )}
-                </Button>
-              </form>
-              {!isAskingAI && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs text-primary"
-                  onClick={() => handleGreetingChoice('intake')}
-                >
-                  <ClipboardList className="mr-1 h-3 w-3" />
-                  Switch to Deal Intake
-                </Button>
-              )}
-            </div>
-          )}
-
-          {/* --- Intake ------------------------------------------- */}
-          {mode === 'intake' && currentQuestion && (
-            <QuestionInput
-              question={currentQuestion}
-              onSubmit={handleAnswerSubmit}
-              onSkip={currentQuestion.optional ? handleSkip : undefined}
-              disabled={isSavingDraft || isGeneratingSummary}
-            />
-          )}
-
-          {/* --- Complete (generate) ------------------------------ */}
-          {mode === 'complete' && (
-            <div className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
-              <p className="text-sm text-slate-600">
-                Intake complete. Generate your executive summary now.
-              </p>
-              <Button
-                type="button"
-                onClick={handleGenerateSummary}
-                disabled={isGeneratingSummary || isSavingDraft}
-              >
-                {isGeneratingSummary ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Generate Executive Summary
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
-
-          {isSavingDraft && (
-            <div className="flex items-center text-sm text-slate-500">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving intake answers...
-            </div>
-          )}
+          {greetingBlock}
+          {freeformBlock}
+          {intakeBlock}
+          {completeBlock}
+          {savingIndicator}
         </CardContent>
       </Card>
 
-      {/* --- Summary + PDF + Save --------------------------------- */}
-      {summaryText && (
-        <SummaryView
-          summaryText={summaryText}
-          checklist={checklist}
-          onDownloadPdf={handleDownloadPdf}
-          onSaveSubmission={handleSaveSubmission}
-          savingSubmission={isSavingSubmission}
-          isSaved={submissionSaved}
-        />
-      )}
+      {summaryBlock}
     </div>
   );
 }
