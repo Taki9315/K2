@@ -4,57 +4,96 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   BookOpen,
-  Users,
   TrendingUp,
   Shield,
   CheckCircle2,
   ArrowRight,
-  Zap,
   FileCheck,
-  Compass,
   Headphones,
   Star,
-  MessageCircle,
   BarChart3,
   Award,
+  MessageCircle,
 } from 'lucide-react';
 import VideoCards from '@/components/VideoCards';
 import { ReadinessQuiz } from '@/components/ReadinessQuiz';
 import { LoanTypesGuide } from '@/components/LoanTypesGuide';
 import { StatsCounter } from '@/components/StatsCounter';
 
-const ROADMAP_STEPS = [
+type PathItem = {
+  step: number;
+  icon: typeof BookOpen;
+  title: string;
+  idealFor: string;
+  bullets: string[];
+  commitment: string;
+  cta: { label: string; href: string };
+  feeTransparency?: {
+    title: string;
+    text: string;
+    tiers: string[];
+    footnote: string;
+  };
+};
+
+const PATHS: PathItem[] = [
   {
     step: 1,
-    icon: Zap,
-    title: 'Get Prepared Fast',
-    description:
-      'Start with free videos or grab the workbook in minutes. No guesswork — clear frameworks from day one.',
-    cta: { label: 'Browse Free Content', href: '/content' },
+    icon: BookOpen,
+    title: 'Path 1: Build Literacy for Free – Start Learning Today',
+    idealFor:
+      'Borrowers exploring options, building basics, or deciding if financing makes sense right now.',
+    bullets: [
+      'Instant access to our free video library and articles (no signup needed).',
+      'Cover loan programs, common pitfalls, underwriting essentials, and prep strategies.',
+      'Gain the knowledge to ask better questions and spot red flags early.',
+    ],
+    commitment: '$0 – Time investment only.',
+    cta: { label: 'Browse Free Educational Content', href: '/content' },
   },
   {
     step: 2,
     icon: FileCheck,
-    title: 'Build Your Strong Profile',
-    description:
-      'Use templates to organize docs, select the right loan program, and identify your ideal lenders.',
-    cta: { label: 'Get the Workbook', href: '/workbook' },
+    title: 'Path 2: Go Independent with Confidence – Financing Success Kit',
+    idealFor:
+      'Ready borrowers who want to identify the best program, package their deal professionally, and find/match lenders on their own.',
+    bullets: [
+      'Our comprehensive Financing Success Kit – $15 one-time (50+ pages, 15+ worksheets/templates).',
+      'Step-by-step guidance to select the right loan type, organize docs lenders love, compare options, and avoid mistakes that kill deals.',
+      'Includes Document Vault, lender comparison tools, checklists – lifetime access, instant PDF download.',
+    ],
+    commitment: '$15 one-time. No subscription.',
+    cta: { label: 'Get the Financing Success Kit – Only $15', href: '/workbook' },
   },
   {
     step: 3,
-    icon: Compass,
-    title: 'Streamline Your Prep',
-    description:
-      'Upload and manage your preparation documents in a simple vault. Checklists keep you on track.',
-    cta: { label: 'View Resources', href: '/Resource' },
-  },
-  {
-    step: 4,
     icon: Headphones,
-    title: 'Get Expert Acceleration',
-    description:
-      'Join for live Q&A, document reviews, and community guidance to close deals faster and on better terms.',
-    cta: { label: 'Join the Program', href: '/membership' },
+    title: 'Path 3: Expert Guidance + $1,500 Closing Credit – Become a K2 Certified Borrower',
+    idealFor:
+      'Serious borrowers seeking faster approvals, better terms, and personalized support through complex deals or any asset class.',
+    bullets: [
+      'One-time $150 fee to become a K2 Certified Borrower – lifetime access.',
+      'Full automated transaction management system: upload docs, track progress, use checklists.',
+      'Direct access to our Preferred Lender network (virtually any program or asset type).',
+      'Monthly live Q&A, advanced videos/case studies, document review & feedback, private community.',
+      'Exclusive Incentive: $1,500 closing credit applied at funding from any K2 Preferred Lender you close with (reduces your costs directly).',
+    ],
+    feeTransparency: {
+      title: 'Full Transparency on How We Earn',
+      text: 'K2 Commercial Finance receives a flat success fee only on closed loans you fund through our Preferred Lenders:',
+      tiers: [
+        '2% on loans under $500,000',
+        '1.5% on loans $500,000 – $1,000,000',
+        '1% on loans above $1,000,000',
+      ],
+      footnote:
+        'This fee comes from the lender (not you), is standard in the industry, and is fully disclosed upfront so there are no surprises. Your success is our priority—better preparation means stronger deals for everyone.',
+    },
+    commitment: '$150 one-time (high-value investment with credit payback potential).',
+    cta: {
+      label: 'K2 Certified Borrower – $150 + $1,500 Credit',
+      href: '/membership/certified-borrower',
+    },
   },
 ];
 
@@ -88,143 +127,133 @@ export default function Home() {
       {/* ============================================================ */}
       {/*  HERO                                                         */}
       {/* ============================================================ */}
-      <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-16 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
-                <Zap className="h-4 w-4" />
-                Trusted by 500+ borrowers nationwide
-              </div>
-
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-                Fast-Track Your{' '}
-                <span className="text-primary">Financing Success</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-slate-600 mb-2 leading-relaxed">
-                Get Institutional-Ready in Minutes.
+      <section className="relative bg-gradient-to-br from-slate-50 to-slate-100 py-20 md:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Fast Track Funding
+              <p className="text-2xl text-primary/90 mt-4">
+                <span className="text-slate-500">
+                  Rapid Results, Higher Returns.
+                </span>
               </p>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed italic">
-                &ldquo;This $14.95 Success Kit will position you as a borrower
-                the Banks will WANT to work with — and your transaction as one
-                they will want to fund.&rdquo;
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg shadow-primary/20">
-                  <Link href="/workbook">
-                    Get Your Success Kit — $14.95
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  asChild
-                  className="text-lg px-8 py-6 hover:bg-primary hover:text-primary-foreground"
-                >
-                  <Link href="/content">
-                    Start Free
-                    <BookOpen className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  Instant PDF download
-                </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  No subscription
-                </span>
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  Lifetime access
-                </span>
-              </div>
-            </div>
-
-            <div className="relative flex justify-center lg:justify-end">
-              <Image
-                src="/book_cover.png"
-                alt="K2 Borrower Preparation Workbook"
-                width={480}
-                height={620}
-                className="rounded-xl shadow-2xl object-contain max-h-[520px] w-auto"
-                priority
-              />
-              <Link
-                href="/workbook"
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border-2 border-yellow-500 bg-yellow-400 px-8 py-3 text-sm font-bold text-gray-900 shadow-md transition-all hover:bg-yellow-300 hover:shadow-lg hover:scale-105"
+            </h1>
+            <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
+                You&apos;ve found us. Now choose your path: Free education to get
+                smarter… a one-time toolkit to go independent… or expert
+                guidance with a $1,500 closing credit to accelerate results.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild className="text-lg px-8 py-6">
+                <Link href="/workbook">
+                  Download Workbook
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="text-lg px-8 py-6 hover:bg-primary hover:text-primary-foreground"
               >
-                Learn More
-                <BookOpen className="h-4 w-4" />
-              </Link>
+                <Link href="/membership">
+                  Join Membership
+                  <MessageCircle className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
             </div>
+            <p className="text-sm text-gray-500 mt-4">
+              Trusted by entrepreneurs and borrowers nationwide
+            </p>
           </div>
         </div>
       </section>
-
       {/* ============================================================ */}
-      {/*  HOW IT WORKS — 4-STEP ROADMAP                                */}
+      {/*  CHOOSE YOUR PATH                                             */}
       {/* ============================================================ */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Your Borrower Success Roadmap
+              Choose Your Path to Financing Success
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              A proven 4-step journey that turns preparation into approvals.
-              Start anywhere — every step gets you closer to funding.
+              Since landing here, every borrower has three clear options. Pick
+              the one that matches your readiness and goals.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {ROADMAP_STEPS.map((item) => (
-              <div key={item.step} className="relative group">
-                <Card className="h-full border-2 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white text-lg font-bold shadow-sm">
-                        {item.step}
-                      </div>
-                      <item.icon className="h-6 w-6 text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-0 items-stretch md:overflow-hidden md:rounded-xl md:border-2 md:border-slate-200">
+            {PATHS.map((item) => (
+              <Card
+                key={item.step}
+                className="flex flex-col border-2 md:rounded-none md:border-0 md:border-r md:border-slate-200 md:last:border-r-0 hover:border-primary/30 md:hover:border-primary/0 hover:bg-slate-50/50 transition-all duration-300 h-full"
+              >
+                <CardHeader className="pb-3 flex-shrink-0">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white text-lg font-bold shadow-sm">
+                      {item.step}
                     </div>
-                    <CardTitle className="text-lg">{item.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {item.description}
-                    </p>
-                    <Link
-                      href={item.cta.href}
-                      className="inline-flex items-center text-sm font-medium text-primary hover:underline"
-                    >
-                      {item.cta.label}
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </Link>
-                  </CardContent>
-                </Card>
-                {item.step < 4 && (
-                  <div className="hidden lg:flex absolute top-1/2 -right-4 z-10 h-8 w-8 items-center justify-center text-slate-300">
-                    <ArrowRight className="h-5 w-5" />
+                    <item.icon className="h-6 w-6 text-primary" />
                   </div>
-                )}
-              </div>
+                  <CardTitle className="text-lg leading-snug">
+                    {item.title}
+                  </CardTitle>
+                  <p className="text-sm font-medium text-primary mt-2">
+                    Ideal for: {item.idealFor}
+                  </p>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col min-h-0">
+                  <div className="flex-1 space-y-4">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+                        What You Get:
+                      </p>
+                      <ul className="space-y-2">
+                        {item.bullets.map((bullet, i) => (
+                          <li
+                            key={i}
+                            className="flex items-start gap-2 text-sm text-gray-600"
+                          >
+                            <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+                            {bullet}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {'feeTransparency' in item && item.feeTransparency && (
+                      <div className="rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm">
+                        <p className="font-semibold text-gray-900 mb-2">
+                          {item.feeTransparency.title}
+                        </p>
+                        <p className="text-gray-600 mb-2">
+                          {item.feeTransparency.text}
+                        </p>
+                        <ul className="list-disc list-inside text-gray-600 mb-2 space-y-1">
+                          {item.feeTransparency.tiers.map((tier, i) => (
+                            <li key={i}>{tier}</li>
+                          ))}
+                        </ul>
+                        <p className="text-xs text-gray-500 italic">
+                          {item.feeTransparency.footnote}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-auto pt-4 flex-shrink-0 space-y-2">
+                    <p className="text-sm font-medium text-gray-700">
+                      Commitment: {item.commitment}
+                    </p>
+                    <Button asChild className="w-full">
+                      <Link href={item.cta.href}>
+                        {item.cta.label}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button size="lg" asChild className="shadow-lg shadow-primary/20">
-              <Link href="/workbook">
-                Launch Your Financing Journey
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
           </div>
         </div>
       </section>
@@ -232,11 +261,11 @@ export default function Home() {
       {/* ============================================================ */}
       {/*  STATS & SOCIAL PROOF                                         */}
       {/* ============================================================ */}
-      <section className="py-16 bg-primary">
+      {/* <section className="py-16 bg-primary">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <StatsCounter />
         </div>
-      </section>
+      </section> */}
 
       {/* ============================================================ */}
       {/*  INTERACTIVE READINESS QUIZ                                    */}
@@ -349,12 +378,13 @@ export default function Home() {
                 Rated 5.0 by 200+ borrowers
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                The Borrower Preparation Workbook
+                Financing Success Kit
               </h2>
               <p className="text-lg text-gray-600 mb-6">
-                A comprehensive, step-by-step guide that walks you through
-                everything you need to prepare for financing. No fluff — just
-                actionable frameworks used by experienced borrowers.
+                Our comprehensive one-time toolkit: 50+ pages, 15+ worksheets and
+                templates. Step-by-step guidance to select the right loan type,
+                organize docs lenders love, compare options, and avoid mistakes
+                that kill deals.
               </p>
               <ul className="space-y-4 mb-8">
                 {[
@@ -373,7 +403,7 @@ export default function Home() {
               </ul>
               <Button size="lg" asChild className="shadow-lg shadow-primary/20">
                 <Link href="/workbook">
-                  Get the Workbook — $14.95
+                  Get the Financing Success Kit – Only $15
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -403,7 +433,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Price</span>
-                  <span className="font-semibold text-2xl">$14.95</span>
+                  <span className="font-semibold text-2xl">$15</span>
                 </div>
               </div>
             </div>
@@ -455,7 +485,7 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  FINANCING ACCELERATION PROGRAM (ADVISOR / COMMUNITY)         */}
+      {/*  K2 CERTIFIED BORROWER (PATH 3 DEEP DIVE)                     */}
       {/* ============================================================ */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -465,7 +495,7 @@ export default function Home() {
                 <div className="aspect-video bg-white rounded-lg flex items-center justify-center mb-6">
                   <Image
                     src="/assets/Borrower_Logo.png"
-                    alt="Borrower Logo"
+                    alt="K2 Certified Borrower"
                     width={510}
                     height={225}
                     className="rounded-lg object-cover"
@@ -473,15 +503,15 @@ export default function Home() {
                 </div>
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold text-gray-900">
-                    Member Benefits
+                    What You Get
                   </h3>
                   <ul className="space-y-3">
                     {[
-                      'Monthly Q&A with capital markets advisors',
-                      'Exclusive advanced video library',
-                      'Document review & expert feedback',
-                      'Private member community & forum',
-                      'Priority access to new tools & updates',
+                      'Full automated transaction management system',
+                      'Direct access to Preferred Lender network',
+                      'Monthly live Q&A, document review & feedback',
+                      'Private community & advanced content',
+                      '$1,500 closing credit at funding',
                     ].map((benefit) => (
                       <li key={benefit} className="flex items-center">
                         <CheckCircle2 className="h-5 w-5 text-green-600 mr-2 flex-shrink-0" />
@@ -495,38 +525,44 @@ export default function Home() {
             <div className="order-1 lg:order-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4">
                 <Headphones className="h-4 w-4" />
-                Expert Capital Markets-Style Guidance
+                Expert Guidance + $1,500 Closing Credit
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Financing Acceleration Program
+                Become a K2 Certified Borrower
               </h2>
               <p className="text-lg text-gray-600 mb-4">
-                Go beyond the workbook. Get ongoing support, exclusive content,
-                and direct access to expert guidance as you navigate your
-                financing journey.
+                Ideal for serious borrowers seeking faster approvals, better
+                terms, and personalized support through complex deals or any
+                asset class.
               </p>
               <p className="text-gray-600 mb-6">
-                Think of it as having a capital markets advisor in your corner —
-                reviewing your deals, answering tough questions, and helping you
-                present your package like an institutional borrower.
+                One-time $150 fee for lifetime access. Full transaction
+                management, Preferred Lender network, monthly Q&A, document
+                review, and more. Plus: $1,500 closing credit applied at
+                funding from any K2 Preferred Lender you close with.
               </p>
-              <ul className="space-y-4 mb-8">
-                {[
-                  'Monthly live Q&A calls with lending experts',
-                  'Private member community and forum',
-                  'Advanced training videos and case studies',
-                  'Document review and feedback',
-                  'Side-by-side lender comparison tools',
-                ].map((feature) => (
-                  <li key={feature} className="flex items-start">
-                    <CheckCircle2 className="h-6 w-6 text-green-600 mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="rounded-lg bg-slate-50 border border-slate-200 p-5 mb-8">
+                <p className="font-semibold text-gray-900 mb-2">
+                  Full Transparency on How We Earn
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  K2 Commercial Finance receives a flat success fee only on
+                  closed loans you fund through our Preferred Lenders:
+                </p>
+                <ul className="list-disc list-inside text-sm text-gray-600 mb-2 space-y-1">
+                  <li>2% on loans under $500,000</li>
+                  <li>1.5% on loans $500,000 – $1,000,000</li>
+                  <li>1% on loans above $1,000,000</li>
+                </ul>
+                <p className="text-xs text-gray-500 italic">
+                  This fee comes from the lender (not you), is standard in the
+                  industry, and is fully disclosed upfront so there are no
+                  surprises.
+                </p>
+              </div>
               <Button size="lg" asChild className="shadow-lg shadow-primary/20">
-                <Link href="/membership">
-                  Join the Program
+                <Link href="/membership/certified-borrower">
+                  Become a K2 Certified Borrower – $150 + $1,500 Credit
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -560,7 +596,7 @@ export default function Home() {
               className="hover:bg-primary hover:text-primary-foreground"
             >
               <Link href="/content">
-                View All Free Content
+                Browse Free Educational Content
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -589,7 +625,7 @@ export default function Home() {
               className="text-lg px-8 py-6 bg-primary hover:bg-primary/90 shadow-lg"
             >
               <Link href="/workbook">
-                Get Prepared in Minutes
+                Get the Financing Success Kit – Only $15
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -599,7 +635,9 @@ export default function Home() {
               asChild
               className="text-lg px-8 py-6 border-white hover:bg-white hover:text-slate-900"
             >
-              <Link href="/membership">Explore Membership</Link>
+              <Link href="/membership/certified-borrower">
+                Become a K2 Certified Borrower – $150 + $1,500 Credit
+              </Link>
             </Button>
           </div>
         </div>

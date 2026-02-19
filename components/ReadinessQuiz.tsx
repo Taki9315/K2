@@ -95,11 +95,11 @@ function computeResult(answers: Record<string, number>): QuizResult {
       headline: 'You Have Great Potential — Start Building Your Foundation',
       advice: [
         'Begin with the free video content to understand the lending landscape.',
-        'The Borrower Preparation Workbook will give you a complete roadmap.',
+        'The Financing Success Kit will give you a complete roadmap.',
         'Focus on organizing your financials and understanding what lenders need.',
       ],
       recommended: [
-        'Borrower Preparation Workbook ($14.95)',
+        'Financing Success Kit ($15)',
         'Free Educational Videos',
         'Document Vault templates',
       ],
@@ -115,12 +115,12 @@ function computeResult(answers: Record<string, number>): QuizResult {
       advice: [
         'You have solid foundations — now refine your borrower presentation.',
         'Use the lender comparison worksheets to identify your best-fit lenders.',
-        'Consider joining the Financing Acceleration Program for expert guidance.',
+        'Consider becoming a K2 Certified Borrower for expert guidance.',
       ],
       recommended: [
-        'Borrower Preparation Workbook ($14.95)',
+        'Financing Success Kit ($15)',
         'Lender Comparison Worksheets',
-        'Financing Acceleration Program membership',
+        'K2 Certified Borrower ($150 + $1,500 credit)',
       ],
     };
   }
@@ -133,10 +133,10 @@ function computeResult(answers: Record<string, number>): QuizResult {
     advice: [
       'Your experience is your advantage — make sure your presentation matches.',
       'Use the workbook templates to ensure zero gaps in your package.',
-      'The Financing Acceleration Program gives you access to expert review of your deal.',
+      'K2 Certified Borrower gives you access to expert review of your deal.',
     ],
     recommended: [
-      'Financing Acceleration Program membership',
+      'K2 Certified Borrower ($150 + $1,500 credit)',
       'Deal Intake Assistant (chatbot)',
       'Monthly live Q&A sessions',
     ],
