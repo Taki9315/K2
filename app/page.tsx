@@ -401,7 +401,7 @@ export default function Home() {
       {/* ============================================================ */}
       {/*  LOAN TYPES & PREP GUIDES                                     */}
       {/* ============================================================ */}
-      <section className="py-24 bg-slate-50">
+      {/* <section className="py-24 bg-slate-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Know Your Options</p>
@@ -417,7 +417,7 @@ export default function Home() {
 
           <LoanTypesGuide />
         </div>
-      </section>
+      </section> */}
 
       {/* ============================================================ */}
       {/*  THE BORROWER PREPARATION WORKBOOK                            */}

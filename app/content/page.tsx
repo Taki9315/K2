@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
+import { LoanTypesGuide } from '@/components/LoanTypesGuide';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PlayCircle, FileText, Search, Filter } from 'lucide-react';
@@ -217,7 +218,23 @@ export default function ContentHubPage() {
           )}
         </div>
       </section>
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Know Your Options</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5">
+              Know Your Loan Programs
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Understanding available programs is the first step to choosing the
+              right one. Expand each to see what lenders look for, common
+              pitfalls, and a prep tip linked to the workbook.
+            </p>
+          </div>
 
+          <LoanTypesGuide />
+        </div>
+      </section>
       <section className="py-20 bg-slate-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-6">
