@@ -86,7 +86,9 @@ export default function ContentHubPage() {
     setFilteredContent(filtered);
   };
 
-  const categories = Array.from(new Set(content.map((item) => item.category)));
+  const defaultCategories = ['Loan Programs', 'Lender Types', 'Property Types'];
+  const dynamicCategories = Array.from(new Set(content.map((item) => item.category)));
+  const categories = Array.from(new Set([...defaultCategories, ...dynamicCategories]));
 
   return (
     <div className="flex flex-col">
