@@ -17,6 +17,7 @@ import {
   Sparkles,
   Users,
   Quote,
+  Bot,
 } from 'lucide-react';
 import { ReadinessQuiz } from '@/components/ReadinessQuiz';
 import { PathsAccordion } from '@/components/PathsAccordion';
@@ -160,6 +161,48 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
             <ReadinessQuiz />
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  MEET PREPCOACH                                               */}
+      {/* ============================================================ */}
+      <section className="py-24 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+          <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
+        </div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-6">
+            <Sparkles className="h-4 w-4" />
+            Built-In AI Agent
+          </div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+            Meet <span className="text-primary">PrepCoach</span>
+          </h2>
+          <p className="text-lg text-gray-600 mb-4 leading-relaxed max-w-2xl mx-auto">
+            Your personal AI coach that walks you through every preparation
+            step — so you show up organized, confident, and lender-ready.
+          </p>
+          <p className="text-gray-500 mb-10 leading-relaxed max-w-2xl mx-auto">
+            It doesn&apos;t replace experts — it prepares you to work smarter
+            with them. The result? Faster responses, better terms, and deals
+            that close.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
+              <Link href="/prepcoach">
+                Explore PrepCoach
+                <Bot className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild className="hover:bg-primary hover:text-primary-foreground transition-all duration-300">
+              <Link href="/workbook">
+                Financing Success Kit
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

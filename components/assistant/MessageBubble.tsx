@@ -28,7 +28,7 @@ export function MessageBubble({ role, message }: MessageBubbleProps) {
           ) : (
             <>
               <Bot className="h-3.5 w-3.5" />
-              Loan Assistant
+              PrepCoach
             </>
           )}
         </div>

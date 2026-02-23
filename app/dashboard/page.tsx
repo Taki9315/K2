@@ -14,6 +14,12 @@ import {
   TrendingUp,
   ShoppingBag,
   ArrowRight,
+  Bot,
+  FileText,
+  DollarSign,
+  BarChart3,
+  Phone,
+  Compass,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -224,6 +230,48 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bot className="h-5 w-5 text-primary" />
+                    K2 PrepCoach Tasks
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Select a task to get step-by-step AI coaching for your loan package.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      { icon: FileText, label: 'Executive Summary', href: '/prepcoach#executive-summary' },
+                      { icon: DollarSign, label: 'Financial Statement', href: '/prepcoach#personal-financial-statement' },
+                      { icon: BarChart3, label: 'Calculate DSCR', href: '/prepcoach#dscr-calculator' },
+                      { icon: Phone, label: 'Lender Scripts', href: '/prepcoach#lender-scripts' },
+                      { icon: Compass, label: 'General Onboarding', href: '/prepcoach#onboarding' },
+                    ].map((task) => (
+                      <Button
+                        key={task.label}
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="justify-start gap-2 h-auto py-2.5 text-left"
+                      >
+                        <Link href={task.href}>
+                          <task.icon className="h-4 w-4 text-primary flex-shrink-0" />
+                          <span className="text-sm">{task.label}</span>
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                  <Button variant="link" size="sm" asChild className="mt-3 px-0">
+                    <Link href="/prepcoach">
+                      View all PrepCoach templates
+                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
                   <CardTitle>Recent Content</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -270,7 +318,7 @@ export default function DashboardPage() {
                         intake.
                       </p>
                       <AssistantDialog
-                        triggerLabel="Open Loan Assistant"
+                        triggerLabel="Open PrepCoach"
                         triggerVariant="default"
                       />
                     </div>
@@ -319,13 +367,19 @@ export default function DashboardPage() {
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/content">Browse Content</Link>
                   </Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/prepcoach">
+                      <Bot className="mr-2 h-4 w-4" />
+                      PrepCoach Templates
+                    </Link>
+                  </Button>
                   {!hasMembership && (
                     <Button variant="outline" className="w-full" asChild>
                       <Link href="/workbook">Get Workbook</Link>
                     </Button>
                   )}
                   <AssistantDialog
-                    triggerLabel="Loan Assistant"
+                    triggerLabel="PrepCoach"
                     triggerVariant="outline"
                     triggerClassName="w-full"
                   />

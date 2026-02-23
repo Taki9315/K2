@@ -32,10 +32,10 @@ export function AssistantLauncher() {
               </div>
               <div>
                 <h2 className="text-sm font-bold text-white leading-tight">
-                  Live Chat
+                  PrepCoach
                 </h2>
                 <p className="text-[11px] text-white/60">
-                  K2 Deal Intake Assistant
+                  Your AI Preparation Coach
                 </p>
               </div>
             </div>

@@ -23,6 +23,7 @@ import {
   Target,
   TrendingUp,
   Quote,
+  Sparkles,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -279,6 +280,39 @@ export default function CertifiedBorrowerSample() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  PREPCOACH HIGHLIGHT                                          */}
+      {/* ============================================================ */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
+        </div>
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4">
+            <Sparkles className="h-4 w-4" />
+            Included with Certification
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Meet PrepCoach
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+            Your personal AI coach that walks you through every preparation
+            step — so you show up organized, confident, and lender-ready.
+          </p>
+          <p className="text-gray-500 max-w-2xl mx-auto mb-8">
+            It doesn&apos;t replace experts — it prepares you to work smarter
+            with them. Faster responses, better terms, deals that close.
+          </p>
+          <Link
+            href="/prepcoach"
+            className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
+          >
+            Explore PrepCoach
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 

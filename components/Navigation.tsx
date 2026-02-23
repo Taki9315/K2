@@ -40,6 +40,7 @@ export function Navigation() {
     { href: '/about', label: 'About' },
     { href: '/workbook', label: 'Workbook' },
     { href: '/membership', label: 'Membership' },
+    ...(user ? [{ href: '/prepcoach', label: 'PrepCoach' }] : []),
     { href: '/Resource', label: 'Resource' },
   ];
 

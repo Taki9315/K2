@@ -1,14 +1,19 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { PDFDocument, StandardFonts, type PDFFont, rgb } from 'pdf-lib';
 import {
   AlertCircle,
+  BarChart3,
   Bot,
+  Compass,
+  ClipboardList,
+  DollarSign,
+  FileText,
   Loader2,
   MessageSquare,
+  Phone,
   Sparkles,
-  ClipboardList,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -44,12 +49,21 @@ import {
   type AnswerValue,
 } from '@/lib/assistant/questions';
 import { buildExecutiveSummary } from '@/lib/assistant/summary-template';
+import { PREPCOACH_TASKS } from '@/lib/assistant/tasks';
 
 type SubmissionResponse = {
   submission: { id: string };
 };
 
-type WizardMode = 'greeting' | 'freeform' | 'intake' | 'complete' | 'summary';
+type WizardMode = 'greeting' | 'freeform' | 'task' | 'intake' | 'complete' | 'summary';
+
+const TASK_ICON_MAP: Record<string, React.ReactNode> = {
+  FileText: <FileText className="h-5 w-5 shrink-0 text-primary" />,
+  DollarSign: <DollarSign className="h-5 w-5 shrink-0 text-primary" />,
+  BarChart3: <BarChart3 className="h-5 w-5 shrink-0 text-primary" />,
+  Phone: <Phone className="h-5 w-5 shrink-0 text-primary" />,
+  Compass: <Compass className="h-5 w-5 shrink-0 text-primary" />,
+};
 
 const createMessageId = () =>
   `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
@@ -144,9 +158,17 @@ function getAutoMessages(questionId: string, answers: Answers): string[] {
 
 type AssistantWizardProps = {
   compact?: boolean;
+  /** When provided, auto-sends this prompt into the given task on mount. */
+  initialPrompt?: string;
+  /** Task ID to use when auto-sending initialPrompt. */
+  initialTaskId?: string;
 };
 
-export function AssistantWizard({ compact = false }: AssistantWizardProps) {
+export function AssistantWizard({
+  compact = false,
+  initialPrompt,
+  initialTaskId,
+}: AssistantWizardProps) {
   const { user } = useAuth();
 
   const [mode, setMode] = useState<WizardMode>('greeting');
@@ -159,10 +181,14 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
       id: createMessageId(),
       role: 'assistant',
       message:
-        "Welcome to K2 Commercial Finance! I'm your deal intake assistant. How can I help you today?",
+        "Welcome to K2 Commercial Finance! I'm PrepCoach, your AI preparation coach. How can I help you today?",
     },
   ]);
   const [freeformInput, setFreeformInput] = useState('');
+  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+  const [taskHistory, setTaskHistory] = useState<
+    { role: 'user' | 'assistant'; content: string }[]
+  >([]);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [summaryText, setSummaryText] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -181,6 +207,78 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
     (qId) => answers[qId] !== undefined
   ).length;
   const checklist = useMemo(() => buildDocumentChecklist(answers), [answers]);
+
+  /* ---------- Auto-launch from initial prompt -------------------- */
+
+  const hasAutoLaunched = useRef(false);
+
+  useEffect(() => {
+    if (hasAutoLaunched.current) return;
+    if (!initialPrompt || !initialTaskId || !user) return;
+    hasAutoLaunched.current = true;
+
+    // Set up task mode with the prompt already sent
+    const taskDef = PREPCOACH_TASKS.find((t) => t.id === initialTaskId);
+    const taskTitle = taskDef?.title ?? 'PrepCoach Task';
+
+    setMessages([
+      {
+        id: createMessageId(),
+        role: 'assistant',
+        message:
+          "Welcome to K2 Commercial Finance! I'm PrepCoach. Let me work on that for you...",
+      },
+      { id: createMessageId(), role: 'user', message: taskTitle },
+    ]);
+    setActiveTaskId(initialTaskId);
+    setMode('task');
+    setIsAskingAI(true);
+
+    const history = [{ role: 'user' as const, content: initialPrompt }];
+    setTaskHistory(history);
+
+    // Fire the API call
+    (async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (!session?.access_token) throw new Error('Not authenticated');
+
+        const res = await fetch('/api/ask-question', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            question: initialPrompt,
+            taskId: initialTaskId,
+            history: [],
+          }),
+        });
+        if (!res.ok) throw new Error(await parseErrorMessage(res));
+        const data = (await res.json()) as { answer?: string };
+        const answer = data.answer ?? 'Sorry, I could not generate an answer.';
+
+        setMessages((prev) => [
+          ...prev,
+          { id: createMessageId(), role: 'assistant', message: answer },
+        ]);
+        setTaskHistory((prev) => [
+          ...prev,
+          { role: 'assistant', content: answer },
+        ]);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to get AI response'
+        );
+      } finally {
+        setIsAskingAI(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialPrompt, initialTaskId, user]);
 
   /* ---------- Supabase helpers ----------------------------------- */
 
@@ -340,6 +438,81 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
         role: 'assistant',
         message: data.answer ?? 'Sorry, I could not generate an answer.',
       });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to get AI response'
+      );
+    } finally {
+      setIsAskingAI(false);
+    }
+  };
+
+  /* ---------- Task selection handler ----------------------------- */
+
+  const handleTaskSelect = (taskId: string) => {
+    const task = PREPCOACH_TASKS.find((t) => t.id === taskId);
+    if (!task) return;
+
+    pushMessages(
+      {
+        id: createMessageId(),
+        role: 'user',
+        message: task.title,
+      },
+      {
+        id: createMessageId(),
+        role: 'assistant',
+        message: task.introMessage,
+      }
+    );
+
+    setActiveTaskId(taskId);
+    setTaskHistory([{ role: 'assistant', content: task.introMessage }]);
+    setMode('task');
+  };
+
+  /* ---------- Task conversation handler -------------------------- */
+
+  const handleTaskSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = freeformInput.trim();
+    if (!q || isAskingAI || !activeTaskId) return;
+
+    pushMessages({ id: createMessageId(), role: 'user', message: q });
+
+    const updatedHistory = [
+      ...taskHistory,
+      { role: 'user' as const, content: q },
+    ];
+    setTaskHistory(updatedHistory);
+    setFreeformInput('');
+    setIsAskingAI(true);
+    setError(null);
+
+    try {
+      const token = await getAccessToken();
+      const res = await fetch('/api/ask-question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          question: q,
+          taskId: activeTaskId,
+          history: updatedHistory.slice(-20),
+        }),
+      });
+
+      if (!res.ok) throw new Error(await parseErrorMessage(res));
+      const data = (await res.json()) as { answer?: string };
+      const answer = data.answer ?? 'Sorry, I could not generate an answer.';
+
+      pushMessages({ id: createMessageId(), role: 'assistant', message: answer });
+      setTaskHistory((prev) => [
+        ...prev,
+        { role: 'assistant', content: answer },
+      ]);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to get AI response'
@@ -688,47 +861,111 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
 
   /* ---------- Render --------------------------------------------- */
 
+  const activeTask = PREPCOACH_TASKS.find((t) => t.id === activeTaskId);
+
   const statusText =
     mode === 'greeting'
-      ? 'Choose an option below to get started.'
+      ? 'Choose a task below to get started.'
       : mode === 'freeform'
         ? 'Ask any financing question.'
-        : mode === 'intake'
-          ? 'One question at a time. Your answers are saved automatically.'
-          : 'Your intake is complete.';
+        : mode === 'task'
+          ? activeTask?.title ?? 'Guided task in progress.'
+          : mode === 'intake'
+            ? 'One question at a time. Your answers are saved automatically.'
+            : 'Your intake is complete.';
 
   const greetingBlock = mode === 'greeting' && (
-    <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
-      <Button
-        variant="outline"
-        className={compact ? 'justify-start gap-2 py-4 text-left text-sm' : 'justify-start gap-2 py-6 text-left'}
-        onClick={() => handleGreetingChoice('freeform')}
-      >
-        <MessageSquare className="h-5 w-5 shrink-0 text-primary" />
-        <div>
-          <div className="font-semibold">Ask a Financing Question</div>
-          {!compact && (
-            <div className="text-xs text-slate-500">
-              Get quick guidance on commercial lending
+    <div className="space-y-3">
+      {/* Task buttons */}
+      <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
+        {PREPCOACH_TASKS.map((task) => (
+          <Button
+            key={task.id}
+            variant="outline"
+            className={
+              compact
+                ? 'justify-start gap-2 py-4 text-left text-sm h-auto'
+                : 'justify-start gap-2 py-5 text-left h-auto'
+            }
+            onClick={() => handleTaskSelect(task.id)}
+          >
+            {TASK_ICON_MAP[task.iconName]}
+            <div className="min-w-0">
+              <div className="font-semibold">{task.title}</div>
+              {!compact && (
+                <div className="text-xs text-slate-500">{task.subtitle}</div>
+              )}
             </div>
+          </Button>
+        ))}
+      </div>
+
+      {/* Divider */}
+      <div className="flex items-center gap-2 pt-1">
+        <div className="h-px flex-1 bg-slate-200" />
+        <span className="text-xs text-slate-400">or</span>
+        <div className="h-px flex-1 bg-slate-200" />
+      </div>
+
+      {/* Secondary options */}
+      <div className={compact ? 'grid gap-2' : 'grid gap-3 sm:grid-cols-2'}>
+        <Button
+          variant="ghost"
+          className="justify-start gap-2 text-slate-600 h-auto"
+          onClick={() => handleGreetingChoice('freeform')}
+        >
+          <MessageSquare className="h-4 w-4 shrink-0" />
+          <span className="text-sm">Ask a Quick Question</span>
+        </Button>
+        <Button
+          variant="ghost"
+          className="justify-start gap-2 text-slate-600 h-auto"
+          onClick={() => handleGreetingChoice('intake')}
+        >
+          <ClipboardList className="h-4 w-4 shrink-0" />
+          <span className="text-sm">Full Deal Intake</span>
+        </Button>
+      </div>
+    </div>
+  );
+
+  const taskBlock = mode === 'task' && (
+    <div className="space-y-3">
+      <form onSubmit={handleTaskSubmit} className="flex gap-2">
+        <Input
+          value={freeformInput}
+          onChange={(e) => setFreeformInput(e.target.value)}
+          placeholder="Type your answer..."
+          disabled={isAskingAI}
+        />
+        <Button type="submit" disabled={isAskingAI || !freeformInput.trim()}>
+          {isAskingAI ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Bot className="h-4 w-4" />
           )}
-        </div>
-      </Button>
-      <Button
-        variant="outline"
-        className={compact ? 'justify-start gap-2 py-4 text-left text-sm' : 'justify-start gap-2 py-6 text-left'}
-        onClick={() => handleGreetingChoice('intake')}
-      >
-        <ClipboardList className="h-5 w-5 shrink-0 text-primary" />
-        <div>
-          <div className="font-semibold">Start Deal Intake</div>
-          {!compact && (
-            <div className="text-xs text-slate-500">
-              Submit a deal for analysis
-            </div>
-          )}
-        </div>
-      </Button>
+        </Button>
+      </form>
+      {!isAskingAI && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-xs text-slate-500"
+          onClick={() => {
+            pushMessages({
+              id: createMessageId(),
+              role: 'assistant',
+              message:
+                'No problem! Choose another task or ask me anything.',
+            });
+            setActiveTaskId(null);
+            setTaskHistory([]);
+            setMode('greeting');
+          }}
+        >
+          ← Back to tasks
+        </Button>
+      )}
     </div>
   );
 
@@ -753,11 +990,18 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-primary"
-          onClick={() => handleGreetingChoice('intake')}
+          className="text-xs text-slate-500"
+          onClick={() => {
+            pushMessages({
+              id: createMessageId(),
+              role: 'assistant',
+              message:
+                'No problem! Choose a task or ask me anything.',
+            });
+            setMode('greeting');
+          }}
         >
-          <ClipboardList className="mr-1 h-3 w-3" />
-          Switch to Deal Intake
+          ← Back to tasks
         </Button>
       )}
     </div>
@@ -834,6 +1078,7 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
         <ChatWindow messages={messages} />
 
         {greetingBlock}
+        {taskBlock}
         {freeformBlock}
         {intakeBlock}
         {completeBlock}
@@ -856,7 +1101,7 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
       <Card className="border-slate-200">
         <CardHeader className="space-y-4">
           <div className="space-y-1">
-            <CardTitle className="text-xl">K2 Deal Intake Assistant</CardTitle>
+            <CardTitle className="text-xl">PrepCoach</CardTitle>
             <CardDescription>{statusText}</CardDescription>
           </div>
           {(mode === 'intake' || mode === 'complete') && (
@@ -867,6 +1112,7 @@ export function AssistantWizard({ compact = false }: AssistantWizardProps) {
         <CardContent className="space-y-4">
           <ChatWindow messages={messages} />
           {greetingBlock}
+          {taskBlock}
           {freeformBlock}
           {intakeBlock}
           {completeBlock}
