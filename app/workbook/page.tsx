@@ -1,7 +1,9 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import {
+  ArrowRight,
   CheckCircle2,
   Download,
   Star,
@@ -119,6 +121,85 @@ export default function WorkbookPage() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">Updates</span>
                   <span className="font-semibold">Lifetime Access</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  DETAILED OVERVIEW (moved from homepage)                       */}
+      {/* ============================================================ */}
+      <section className="py-24 bg-slate-50 relative overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-yellow-50 border border-yellow-200 px-4 py-1.5 text-sm font-medium text-yellow-800 mb-6">
+                <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                Rated 5.0 by 200+ borrowers
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+                Financing Success Kit
+              </h2>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Everything you need in one place: 50+ pages of clear, actionable
+                guidance along with 15+ worksheets and templates. It walks you
+                through selecting the right loan type, pulling together the
+                documents lenders want to see, comparing your options, and
+                sidestepping the mistakes that slow deals down.
+              </p>
+              <ul className="space-y-4 mb-10">
+                {[
+                  'Preparing for Financing Success',
+                  'Understanding and Selecting the loan program best suited for your unique situation',
+                  'Finding the right lender — hint... it may not be your local bank',
+                  'Navigating Underwriting and Closing your deal',
+                  'Document Vault — All the forms a lender may request, ready for download',
+                  'Lender Comparison Worksheets',
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start group">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 mt-0.5 group-hover:bg-green-200 transition-colors">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    </div>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
+                <Link href="/signup">
+                  Get the Financing Success Kit — $15
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-50/50 rounded-3xl -rotate-2 scale-105" />
+              <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
+                <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl flex items-center justify-center mb-8">
+                  <Image
+                    src="/assets/Lender_Logo.png"
+                    alt="Lender Logo"
+                    width={510}
+                    height={225}
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Format', value: 'PDF Download' },
+                    { label: 'Pages', value: '50+ Pages' },
+                    { label: 'Templates', value: '15 Worksheets' },
+                  ].map((row) => (
+                    <div key={row.label} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-b-0">
+                      <span className="text-gray-500 text-sm">{row.label}</span>
+                      <span className="font-semibold text-gray-900">{row.value}</span>
+                    </div>
+                  ))}
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-gray-500 text-sm">Price</span>
+                    <span className="font-bold text-3xl text-primary">$15</span>
+                  </div>
                 </div>
               </div>
             </div>

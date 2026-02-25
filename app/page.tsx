@@ -8,7 +8,6 @@ import {
   Shield,
   CheckCircle2,
   ArrowRight,
-  Headphones,
   Star,
   Zap,
   BarChart3,
@@ -105,6 +104,10 @@ export default function Home() {
                 <span className="flex items-center gap-1">
                   <CheckCircle2 className="h-4 w-4 text-green-600" />
                   Lifetime access
+                </span>
+                <span className="flex items-center gap-1">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  Prepared Borrower Guarantee
                 </span>
               </div>
             </div>
@@ -283,88 +286,7 @@ export default function Home() {
         </div>
       </section> */}
 
-      {/* ============================================================ */}
-      {/*  THE FINANCING SUCCESS KIT                                  */}
-      {/* ============================================================ */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-          <div className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-yellow-50 border border-yellow-200 px-4 py-1.5 text-sm font-medium text-yellow-800 mb-6">
-                <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                Rated 5.0 by 200+ borrowers
-              </div>
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-                Financing Success Kit
-              </h2>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Everything you need in one place: 50+ pages of clear, actionable
-                guidance along with 15+ worksheets and templates. It walks you
-                through selecting the right loan type, pulling together the
-                documents lenders want to see, comparing your options, and
-                sidestepping the mistakes that slow deals down.
-              </p>
-              <ul className="space-y-4 mb-10">
-                {[
-                  'Preparing for Financing Success',
-                  'Understanding and Selecting the loan program best suited for your unique situation',
-                  'Finding the right lender — hint... it may not be your local bank',
-                  'Navigating Underwriting and Closing your deal',
-                  'Document Vault — All the forms a lender may request, ready for download',
-                  'Lender Comparison Worksheets',
-                ].map((feature) => (
-                  <li key={feature} className="flex items-start group">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 mt-0.5 group-hover:bg-green-200 transition-colors">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span className="text-gray-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
-                <Link href="/workbook">
-                  Get the Financing Success Kit — $15
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-50/50 rounded-3xl -rotate-2 scale-105" />
-              <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
-                <div className="aspect-video bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl flex items-center justify-center mb-8">
-                  <Image
-                    src="/assets/Lender_Logo.png"
-                    alt="Lender Logo"
-                    width={510}
-                    height={225}
-                    className="rounded-lg object-cover"
-                  />
-                </div>
-                <div className="space-y-4">
-                  {[
-                    { label: 'Format', value: 'PDF Download' },
-                    { label: 'Pages', value: '50+ Pages' },
-                    { label: 'Templates', value: '15 Worksheets' },
-                  ].map((row) => (
-                    <div key={row.label} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-b-0">
-                      <span className="text-gray-500 text-sm">{row.label}</span>
-                      <span className="font-semibold text-gray-900">{row.value}</span>
-                    </div>
-                  ))}
-                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-gray-500 text-sm">Price</span>
-                    <span className="font-bold text-3xl text-primary">$15</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* ============================================================ */}
       {/*  TESTIMONIALS                                                  */}
@@ -420,100 +342,16 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/*  K2 CERTIFIED BORROWER (PATH 3 DEEP DIVE)                     */}
+      {/*  LENDER / VENDOR INQUIRY                                      */}
       {/* ============================================================ */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-          <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="order-2 lg:order-1">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-emerald-50/50 rounded-3xl rotate-2 scale-105" />
-                <div className="relative bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
-                  <div className="aspect-video bg-gradient-to-br from-slate-50 to-white rounded-xl flex items-center justify-center mb-8">
-                    <Image
-                      src="/assets/Borrower_Logo.png"
-                      alt="K2 Certified Borrower"
-                      width={510}
-                      height={225}
-                      className="rounded-lg object-cover"
-                    />
-                  </div>
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-bold text-gray-900">
-                      What You Get
-                    </h3>
-                    <ul className="space-y-3">
-                      {[
-                        'Full automated transaction management system',
-                        'Direct access to Preferred Lender network',
-                        'Monthly live Q&A, document review & feedback',
-                        'Private community & advanced content',
-                        '$1,500 closing credit at funding',
-                      ].map((benefit) => (
-                        <li key={benefit} className="flex items-center group">
-                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 mr-3 flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                            <CheckCircle2 className="h-4 w-4 text-green-600" />
-                          </div>
-                          <span className="text-gray-700">{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="order-1 lg:order-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-6">
-                <Headphones className="h-4 w-4" />
-                Expert Guidance + $1,500 Closing Credit
-              </div>
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-                Become a K2 Certified Borrower
-              </h2>
-              <p className="text-lg text-gray-600 mb-5 leading-relaxed">
-                Built for borrowers who want hands-on support — whether you&apos;re
-                navigating a complex deal, working across asset classes, or
-                simply want the confidence that comes from having experts in
-                your corner.
-              </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                For a one-time $249 fee, you get lifetime access to our full
-                transaction management system, our Preferred Lender network,
-                monthly live Q&A sessions, document review and feedback, and
-                more. And when you close with a K2 Preferred Lender, you
-                receive a $1,500 closing credit applied directly at funding.
-              </p>
-              <div className="rounded-2xl bg-slate-50 border border-slate-200/80 p-6 mb-10">
-                <p className="font-semibold text-gray-900 mb-2">
-                  How We Earn — Full Transparency
-                </p>
-                <p className="text-sm text-gray-600 mb-3">
-                  K2 Commercial Finance receives a flat success fee only when
-                  you close a loan through one of our Preferred Lenders:
-                </p>
-                <ul className="list-disc list-inside text-sm text-gray-600 mb-3 space-y-1">
-                  <li>2% on loans under $500,000</li>
-                  <li>1.5% on loans $500,000 – $1,000,000</li>
-                  <li>1% on loans above $1,000,000</li>
-                </ul>
-                <p className="text-xs text-gray-500 italic">
-                  This fee is paid by the lender — not by you. It&apos;s standard
-                  in the industry and fully disclosed upfront, so there are
-                  never any surprises.
-                </p>
-              </div>
-              <Button size="lg" asChild className="shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
-                <Link href="/membership/certified-borrower">
-                  Become a K2 Certified Borrower
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
-          </div>
+      <section className="py-12 bg-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-gray-600">
+            If you&apos;re interested in joining our network as a preferred lender, or if you&apos;re a commercial real estate service provider,{' '}
+            <Link href="/partnership" className="text-primary font-semibold hover:underline">
+              click here for more information
+            </Link>.
+          </p>
         </div>
       </section>
 

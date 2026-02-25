@@ -8,6 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AssistantDialog } from '@/components/assistant/AssistantDialog';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
   FileText,
   DollarSign,
   BarChart3,
@@ -23,6 +30,13 @@ import {
   CheckCircle2,
   Sparkles,
   Rocket,
+  Shield,
+  Zap,
+  Users,
+  Search,
+  Clock,
+  Award,
+  Info,
 } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
@@ -418,6 +432,63 @@ const EXCEL_TIPS: ExcelTip[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/*  VALUE PROPOSITIONS                                                  */
+/* ------------------------------------------------------------------ */
+
+const VALUE_PROPS = [
+  {
+    icon: FileText,
+    title: 'Step-by-Step Guidance on Key Prep Tasks',
+    text: 'Walks you through executive summaries, personal financial statements, and DSCR calculations — ensuring your package is complete, error-free, and built exactly to what lenders want.',
+  },
+  {
+    icon: Phone,
+    title: 'Custom Scripts for Lender Outreach',
+    text: 'Tailored phone scripts and email templates for your specific deal — so you contact lenders professionally, build instant credibility, and move quickly to real conversations.',
+  },
+  {
+    icon: Shield,
+    title: 'Secure Data Room for Easy, Safe Sharing',
+    text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders — cutting email chaos, protecting your info, and making collaboration seamless.',
+  },
+  {
+    icon: Zap,
+    title: 'Time-Saving Automation with Expert Insights',
+    text: 'Automates calculations, organizes documents, and flags issues early — slashing prep time in half while delivering insider tips that prevent common deal-killers.',
+  },
+  {
+    icon: Award,
+    title: 'Higher Approval Rates and Better Terms',
+    text: 'Certifies you as a low-risk, high-quality borrower — leading to faster responses, stronger "yes" decisions, and more favorable rates from lenders who value preparation.',
+  },
+  {
+    icon: Users,
+    title: "Exclusive Access to K2's Expert Community",
+    text: 'Connects you directly to financing and CRE pros who prefer working with ready borrowers — a high-touch network built on mutual respect and real results.',
+  },
+  {
+    icon: DollarSign,
+    title: 'Cost-Effective Alternative to Consultants',
+    text: 'Skip expensive $5K+ advisors — PrepCoach gives personalized, always-on coaching at a fraction of the cost, empowering you to handle more deals yourself.',
+  },
+  {
+    icon: Search,
+    title: 'Spot & Fix Red Flags Before Lenders Do',
+    text: 'Analyzes your rent roll, financials, and package for hidden issues (rollover risk, weak DSCR, etc.) and provides fixes before they tank your deal.',
+  },
+  {
+    icon: FileSpreadsheet,
+    title: 'Build a Professional, Lender-Ready Package Fast',
+    text: 'Generates polished outputs (summaries, tables, paragraphs) ready for your data room or submission — saving hours of formatting.',
+  },
+  {
+    icon: Clock,
+    title: 'Ongoing Support for Every Deal',
+    text: 'Available in your member dashboard anytime, PrepCoach scales with you — whether prepping one property or building a portfolio.',
+  },
+];
+
+/* ------------------------------------------------------------------ */
 /*  PAGE COMPONENT                                                      */
 /* ------------------------------------------------------------------ */
 
@@ -435,26 +506,34 @@ export default function PrepCoachPage() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
               <Sparkles className="h-4 w-4" />
-              Built-In AI Agent
+              Your Personal AI Coach for CRE Deals
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 leading-tight">
-              Meet <span className="text-primary">PrepCoach</span>
+              Unlock Faster CRE Financing with{' '}
+              <span className="text-primary">K2 PrepCoach</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed mb-4">
-              Your personal AI coach that walks you through every preparation
-              step — so you show up organized, confident, and lender-ready.
+              Tired of killer opportunities slipping away because the financing
+              process is a mess? In the $150K–$5M commercial space, unprepared
+              borrowers face constant rejections and wasted time.
             </p>
-            <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
-              It doesn&apos;t replace experts — it prepares you to work smarter
-              with them. Faster responses, better terms, deals that close.
+            <p className="text-gray-500 max-w-2xl mx-auto leading-relaxed mb-4">
+              K2 PrepCoach changes that. This proprietary AI agent acts as your
+              24/7 personal coach. Built on decades of real CRE lending
+              expertise, it guides you through every step — so you show up
+              prepared, confident, and lender-ready.
+            </p>
+            <p className="text-sm text-gray-400 max-w-xl mx-auto mb-10">
+              No fluff. Just practical, step-by-step support that turns
+              frustration into fast approvals and better terms.
             </p>
           </div>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" asChild className="text-lg px-8 py-6 shadow-lg shadow-primary/20">
-              <Link href="/workbook">
-                Explore the Financing Success Kit
+              <Link href="/membership/certified-borrower">
+                Enroll Now &amp; Get Immediate Access
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -464,11 +543,132 @@ export default function PrepCoachPage() {
               asChild
               className="text-lg px-8 py-6 hover:bg-primary hover:text-primary-foreground"
             >
-              <Link href="/dashboard">
-                Launch PrepCoach
+              <Link href="/workbook">
+                Grab the Free Workbook to Preview
                 <Bot className="ml-2 h-5 w-5" />
               </Link>
             </Button>
+          </div>
+
+          {/* Learn More pop-up trigger */}
+          <div className="text-center mt-6">
+            <LearnMoreDialog />
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  WHY PREPCOACH                                                */}
+      {/* ============================================================ */}
+      <section className="py-20 bg-gradient-to-b from-white to-slate-50 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute -top-40 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
+          <div className="absolute -bottom-40 left-0 w-80 h-80 rounded-full bg-emerald-50 blur-3xl" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 text-sm font-medium text-primary mb-4">
+              <Zap className="h-4 w-4" />
+              Why Serious Investors Choose PrepCoach
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-5">
+              Massive Value at Every Step
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              From deal prep to lender outreach to closing — PrepCoach delivers
+              the edge that separates funded deals from rejected ones.
+            </p>
+          </div>
+
+          {/* Top row: 2 featured cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {VALUE_PROPS.slice(0, 2).map((vp, i) => (
+              <div
+                key={vp.title}
+                className={`relative rounded-2xl p-8 border transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 ${
+                  i === 0
+                    ? 'bg-gradient-to-br from-primary/5 to-emerald-50/50 border-primary/20'
+                    : 'bg-gradient-to-br from-slate-50 to-white border-slate-200'
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-sm ${
+                    i === 0 ? 'bg-primary text-white' : 'bg-white text-primary border border-slate-200'
+                  }`}>
+                    <vp.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      {vp.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {vp.text}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Middle: 3-column grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
+            {VALUE_PROPS.slice(2, 5).map((vp) => (
+              <div
+                key={vp.title}
+                className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <vp.icon className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">
+                  {vp.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {vp.text}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom: 2-column + 3-column mixed */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            {VALUE_PROPS.slice(5, 7).map((vp) => (
+              <div
+                key={vp.title}
+                className="flex items-start gap-4 bg-white rounded-2xl p-6 border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <vp.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1">
+                    {vp.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {vp.text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {VALUE_PROPS.slice(7).map((vp) => (
+              <div
+                key={vp.title}
+                className="group bg-white rounded-2xl p-6 border border-slate-200 hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <vp.icon className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">
+                  {vp.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {vp.text}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -513,23 +713,27 @@ export default function PrepCoachPage() {
             <Bot className="h-7 w-7 text-primary" />
           </div>
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Start Prepping?
+            Ready to Stop Losing Deals?
           </h2>
-          <p className="text-slate-300 mb-8 leading-relaxed max-w-xl mx-auto">
+          <p className="text-slate-300 mb-4 leading-relaxed max-w-xl mx-auto">
+            Your next commercial deal deserves better preparation. Unlock
+            PrepCoach today as part of the K2 Financing Acceleration Program.
+          </p>
+          <p className="text-sm text-slate-400 mb-8 max-w-lg mx-auto">
             Dive into PrepCoach inside your member dashboard. Use the prompts
             above to prepare your documents, then upload everything to your
             secure data room for lender review.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" asChild>
-              <Link href="/dashboard">
-                Launch PrepCoach Now
-                <Bot className="ml-2 h-5 w-5" />
+              <Link href="/membership/certified-borrower">
+                Enroll Now &amp; Get Immediate Access
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button size="lg" asChild className="bg-white/10 text-white border border-white/20 hover:bg-white hover:text-slate-900">
               <Link href="/workbook">
-                Explore the Financing Success Kit
+                Grab the Free Workbook to Preview
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
@@ -796,5 +1000,199 @@ function ExcelTipsSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  LEARN MORE DIALOG                                                   */
+/* ------------------------------------------------------------------ */
+
+function LearnMoreDialog() {
+  const DIALOG_ITEMS = [
+    {
+      icon: FileText,
+      title: 'Step-by-Step Guidance on Key Prep Tasks',
+      text: 'PrepCoach walks you through must-have items like executive summaries, personal financial statements, and DSCR calculations — ensuring your package is complete, error-free, and built exactly to what lenders want.',
+    },
+    {
+      icon: Phone,
+      title: 'Custom Scripts for Lender Outreach',
+      text: 'Get tailored phone scripts and email templates for your specific deal — so you contact lenders professionally, build instant credibility, and move quickly to real conversations instead of getting ghosted.',
+    },
+    {
+      icon: Shield,
+      title: 'Secure Data Room for Easy, Safe Sharing',
+      text: 'Upload polished docs to our encrypted data room and grant targeted access to preferred lenders — cutting email chaos, protecting your info, and making collaboration seamless and professional.',
+    },
+    {
+      icon: Zap,
+      title: 'Time-Saving Automation with Expert Insights',
+      text: 'Automates calculations, organizes documents, and flags issues early — slashing prep time in half while delivering insider tips that prevent common deal-killers and keep momentum high.',
+    },
+    {
+      icon: Award,
+      title: 'Higher Approval Rates and Better Terms',
+      text: 'PrepCoach certifies you as a low-risk, high-quality borrower — leading to faster responses, stronger "yes" decisions, and more favorable rates/terms from lenders who value preparation over junk submissions.',
+    },
+    {
+      icon: Users,
+      title: "Exclusive Access to K2's Expert Community",
+      text: 'As a K2 proprietary tool, PrepCoach connects you directly to our financing and CRE pros who prefer working with ready borrowers — creating a high-touch network built on mutual respect and real results.',
+    },
+    {
+      icon: DollarSign,
+      title: 'Cost-Effective Alternative to Consultants',
+      text: 'Skip expensive $5K+ advisors — PrepCoach gives personalized, always-on coaching at a fraction of the cost, empowering you to handle more deals yourself while still getting pro-level guidance.',
+    },
+    {
+      icon: Search,
+      title: 'Spot & Fix Red Flags Before Lenders Do',
+      text: 'Analyzes your rent roll, financials, and package for hidden issues (rollover risk, weak DSCR, etc.) and provides fixes — helping you strengthen weak spots and avoid surprises that tank deals.',
+    },
+    {
+      icon: FileSpreadsheet,
+      title: 'Build a Professional, Lender-Ready Package Fast',
+      text: 'Generates polished outputs (summaries, tables, paragraphs) ready for your data room or submission — saving hours of formatting and ensuring your materials look sharp and trustworthy from the start.',
+    },
+    {
+      icon: Clock,
+      title: 'Ongoing Support for Every Deal',
+      text: "Available in your member dashboard anytime, PrepCoach scales with you — whether you're prepping one property or building a portfolio — so you close more deals efficiently over time.",
+    },
+  ];
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer group">
+          <Info className="h-4 w-4 group-hover:scale-110 transition-transform" />
+          Learn more about what PrepCoach can do
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto p-0 gap-0 rounded-2xl">
+        {/* Gradient header */}
+        <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-8 pt-8 pb-10 rounded-t-2xl">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent rounded-t-2xl" />
+          <div className="relative">
+            <DialogHeader>
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-3 py-1 text-xs font-medium text-primary-foreground/80 mb-4 w-fit">
+                <Bot className="h-3.5 w-3.5" />
+                Proprietary AI Agent
+              </div>
+              <DialogTitle className="text-2xl md:text-3xl font-bold text-white leading-tight">
+                Unlock Faster CRE Financing with K2 PrepCoach
+              </DialogTitle>
+              <p className="text-base text-slate-300 mt-3 leading-relaxed">
+                Your Personal AI Coach for Crushing Commercial Real Estate Deals
+              </p>
+            </DialogHeader>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="px-8 py-8 space-y-8">
+          {/* Intro text */}
+          <div className="space-y-4 text-gray-600 leading-relaxed">
+            <p>
+              Tired of killer opportunities slipping away because the financing
+              process is a mess? In the $150K–$5M commercial space — where big
+              banks drop the ball — unprepared borrowers face constant
+              rejections, revisions, and wasted time.
+            </p>
+            <p className="text-lg font-semibold text-primary">
+              K2 PrepCoach changes that.
+            </p>
+            <p>
+              This proprietary AI agent, exclusive to K2 Commercial Finance
+              members, acts as your 24/7 personal coach. Built on decades of
+              real CRE lending expertise, it guides you through every step —
+              especially financing — so you show up prepared, confident, and
+              lender-ready.
+            </p>
+            <div className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3">
+              <Sparkles className="h-5 w-5 text-primary flex-shrink-0" />
+              <p className="text-sm italic text-gray-500">
+                No fluff. Just practical, step-by-step support that turns
+                frustration into fast approvals and better terms.
+              </p>
+            </div>
+          </div>
+
+          {/* Section heading */}
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 mb-1">
+              Why PrepCoach Delivers Massive Value
+            </h3>
+            <p className="text-sm text-gray-500">to Serious Investors</p>
+          </div>
+
+          {/* Value prop cards - 2-column grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {DIALOG_ITEMS.map((item, i) => (
+              <div
+                key={item.title}
+                className={`group rounded-xl border p-5 transition-all duration-200 hover:shadow-md ${
+                  i === 0
+                    ? 'border-primary/30 bg-primary/5 sm:col-span-2'
+                    : 'border-slate-200 bg-white hover:border-primary/20'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110 ${
+                    i === 0
+                      ? 'bg-primary text-white'
+                      : 'bg-primary/10 text-primary'
+                  }`}>
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      {item.text}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA footer */}
+          <div className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-center">
+            <p className="text-white font-semibold mb-1">
+              Ready to stop losing deals and start financing them right?
+            </p>
+            <p className="text-sm text-slate-400 mb-5">
+              Unlock PrepCoach today as part of the K2 Financing Acceleration
+              Program.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button size="lg" asChild className="shadow-lg shadow-primary/30">
+                <Link href="/membership/certified-borrower">
+                  Enroll Now &amp; Get Access
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="border-white/20 text-white bg-white/10 hover:bg-white hover:text-slate-900"
+              >
+                <Link href="/workbook">
+                  Free Workbook Preview
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+            <p className="text-xs text-slate-500 mt-4 italic">
+              Your next commercial deal deserves better preparation. Let&apos;s
+              make it happen.
+            </p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -33,7 +33,7 @@ const PATHS: PathItem[] = [
   {
     step: 1,
     icon: BookOpen,
-    title: 'Build Literacy for Free',
+    title: 'Learn Borrowing Tips and Strategies for Free',
     idealFor: `you're exploring or building basics.`,
     bullets: [
       'Free videos & articles - no signup needed',
@@ -46,7 +46,7 @@ const PATHS: PathItem[] = [
   {
     step: 2,
     icon: FileCheck,
-    title: 'Go Independent - Financing Success Kit',
+    title: 'Success Kit',
     idealFor: `you're ready to prepare and pursue on your own.`,
     bullets: [
       '$15 one-time (50+ pages, 15+ worksheets/templates)',
@@ -59,7 +59,7 @@ const PATHS: PathItem[] = [
   {
     step: 3,
     icon: Headphones,
-    title: ' Expert Guidance + $1,500 Credit - K2 Certified Borrower',
+    title: 'Expert Guidance Fast Track — K2 Certified Borrower',
     idealFor: 'faster results, complex deals, or any asset class',
     bullets: [
       '$249 one-time lifetime access',
