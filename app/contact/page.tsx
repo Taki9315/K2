@@ -19,7 +19,7 @@ import { Building2, BarChart3, Users } from 'lucide-react';
 
 // Placeholder – replace with your video URL when ready
 const CONTACT_VIDEO_URL =
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  'https://bigvu.tv/pages/kenkaplan/unlock-your-small-business-loan-successnwjvx1us';;
 const WHO_WE_ARE_IMAGE =
   "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80";
 const FAQ_IMAGE =
@@ -49,7 +49,6 @@ export default function ContactPage() {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
     company: '',
     message: '',
   });
@@ -70,7 +69,6 @@ export default function ContactPage() {
       const messageWithMeta = [
         formData.message,
         formData.company && `Company: ${formData.company}`,
-        formData.phone && `Phone: ${formData.phone}`,
       ].filter(Boolean).join('\n');
 
       const { error: submitError } = await supabase
@@ -89,7 +87,6 @@ export default function ContactPage() {
         firstName: '',
         lastName: '',
         email: '',
-        phone: '',
         company: '',
         message: '',
       });
@@ -127,10 +124,12 @@ export default function ContactPage() {
                   Partner with K2 Commercial Finance Video
                 </div>
                 <div className="aspect-video bg-black relative">
-                  <video className="w-full h-full object-contain" controls preload="metadata">
-                    <source src={CONTACT_VIDEO_URL} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  <iframe
+                    src={CONTACT_VIDEO_URL}
+                    title="Partner with K2 Commercial Finance Video"
+                    className="w-full h-full"
+                    allowFullScreen
+                  />
                 </div>
                 <p className="px-4 py-2 text-sm text-white/70 bg-black border-t border-white/10">
                   Partner with K2 Commercial Finance Video by K2 Commercial Finance.
@@ -224,35 +223,19 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-black">
-                        *Email (required)
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-black">
-                        *Phone Number (required)
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                        className="bg-white border-black/20 focus-visible:ring-primary"
-                      />
-                    </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-black">
+                      *Email (required)
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="bg-white border-black/20 focus-visible:ring-primary"
+                    />
                   </div>
 
                   <div className="space-y-2">

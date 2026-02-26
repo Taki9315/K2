@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AUTH_SIDE_IMAGE =
@@ -28,7 +29,28 @@ export default function LoginPage() {
 
     try {
       await signIn(email, password);
-      router.push('/dashboard');
+
+      // Check if user is admin and route accordingly
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const userRole = authUser?.user_metadata?.role;
+
+      if (userRole === 'admin') {
+        router.push('/admin');
+      } else {
+        // Also check profile table for role
+        if (authUser) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', authUser.id)
+            .maybeSingle();
+          if (profile?.role === 'admin') {
+            router.push('/admin');
+            return;
+          }
+        }
+        router.push('/dashboard');
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to sign in');
     } finally {

@@ -42,6 +42,7 @@ export function Navigation() {
     { href: '/membership', label: 'Certified Borrower' },
     ...(user ? [{ href: '/prepcoach', label: 'PrepCoach' }] : []),
     { href: '/Resource', label: 'Resources' },
+    { href: '/contact', label: 'Contact' },
   ];
 
   const contentSubLinks = [

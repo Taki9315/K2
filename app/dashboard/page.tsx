@@ -91,10 +91,16 @@ export default function DashboardPage() {
         .order('created_at', { ascending: false })
         .limit(3);
 
-      if (error) throw error;
+      if (error) {
+        // Table may not exist yet — silently ignore
+        console.warn('Content table not available yet:', error.message);
+        setRecentContent([]);
+        return;
+      }
       setRecentContent(data || []);
     } catch (error) {
-      console.error('Error fetching content:', error);
+      // Silently handle — content section is optional
+      setRecentContent([]);
     }
   };
 
