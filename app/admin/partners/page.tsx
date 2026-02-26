@@ -26,7 +26,35 @@ import {
   ExternalLink,
   Star,
   Upload,
+  Inbox,
+  Mail,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+type InquiryRow = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string | null;
+  company: string;
+  lender_type?: string;
+  lending_focus?: string;
+  service_type?: string;
+  service_areas?: string;
+  message: string | null;
+  status: 'new' | 'contacted' | 'approved' | 'declined' | 'archived';
+  admin_notes: string | null;
+  created_at: string;
+};
 
 /* ── Types ────────────────────────────────────────────────────────────── */
 type PartnerRow = {
@@ -113,6 +141,11 @@ export default function AdminPartnersPage() {
   const [creating, setCreating] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'lender' | 'vendor'>('all');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [activeTab, setActiveTab] = useState<'partners' | 'inquiries'>('partners');
+  const [lenderInquiries, setLenderInquiries] = useState<InquiryRow[]>([]);
+  const [vendorInquiries, setVendorInquiries] = useState<InquiryRow[]>([]);
+  const [inquiryFilter, setInquiryFilter] = useState<'all' | 'lender' | 'vendor'>('all');
+  const [inquiriesLoading, setInquiriesLoading] = useState(false);
 
   const checkAdmin = useCallback(async () => {
     if (!user) return;
@@ -151,11 +184,42 @@ export default function AdminPartnersPage() {
     }
   }, [user, authLoading, checkAdmin, router]);
 
+  const fetchInquiries = useCallback(async () => {
+    setInquiriesLoading(true);
+    const [lRes, vRes] = await Promise.all([
+      supabase.from('lender_inquiries').select('*').order('created_at', { ascending: false }),
+      supabase.from('vendor_inquiries').select('*').order('created_at', { ascending: false }),
+    ]);
+    if (!lRes.error && lRes.data) setLenderInquiries(lRes.data as InquiryRow[]);
+    if (!vRes.error && vRes.data) setVendorInquiries(vRes.data as InquiryRow[]);
+    setInquiriesLoading(false);
+  }, []);
+
+  const updateInquiryStatus = async (
+    table: 'lender_inquiries' | 'vendor_inquiries',
+    id: string,
+    status: string
+  ) => {
+    const { error } = await supabase.from(table).update({ status }).eq('id', id);
+    if (!error) {
+      if (table === 'lender_inquiries') {
+        setLenderInquiries((prev) =>
+          prev.map((i) => (i.id === id ? { ...i, status: status as InquiryRow['status'] } : i))
+        );
+      } else {
+        setVendorInquiries((prev) =>
+          prev.map((i) => (i.id === id ? { ...i, status: status as InquiryRow['status'] } : i))
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     if (isAdmin) {
       fetchPartners();
+      fetchInquiries();
     }
-  }, [isAdmin, fetchPartners]);
+  }, [isAdmin, fetchPartners, fetchInquiries]);
 
   const handleDelete = async (id: string, name: string) => {
     if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return;
@@ -243,8 +307,172 @@ export default function AdminPartnersPage() {
           </Button>
         </div>
 
-        {/* Filter tabs */}
-        <div className="flex gap-2 mb-6">
+        {/* Main tabs: Partners / Inquiries */}
+        <div className="flex gap-1 mb-6 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('partners')}
+            className={`px-5 py-3 text-sm font-semibold border-b-2 transition ${
+              activeTab === 'partners'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Building2 className="h-4 w-4 inline mr-2" />
+            Partners ({partners.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('inquiries')}
+            className={`px-5 py-3 text-sm font-semibold border-b-2 transition ${
+              activeTab === 'inquiries'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Inbox className="h-4 w-4 inline mr-2" />
+            Inquiries ({lenderInquiries.length + vendorInquiries.length})
+            {(lenderInquiries.filter((i) => i.status === 'new').length +
+              vendorInquiries.filter((i) => i.status === 'new').length) > 0 && (
+              <span className="ml-2 inline-flex items-center justify-center rounded-full bg-red-500 text-white text-[10px] font-bold h-5 min-w-[20px] px-1">
+                {lenderInquiries.filter((i) => i.status === 'new').length +
+                  vendorInquiries.filter((i) => i.status === 'new').length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {activeTab === 'inquiries' ? (
+          /* ── Inquiries Tab ─────────────────────────────────── */
+          <div>
+            <div className="flex gap-2 mb-6">
+              {[
+                { key: 'all' as const, label: 'All', count: lenderInquiries.length + vendorInquiries.length },
+                { key: 'lender' as const, label: 'Lender Inquiries', count: lenderInquiries.length },
+                { key: 'vendor' as const, label: 'Vendor Inquiries', count: vendorInquiries.length },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setInquiryFilter(tab.key)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                    inquiryFilter === tab.key
+                      ? 'bg-primary text-white'
+                      : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  {tab.label}
+                  <span className="ml-1.5 text-xs opacity-70">({tab.count})</span>
+                </button>
+              ))}
+            </div>
+
+            {inquiriesLoading ? (
+              <div className="text-center py-12 text-gray-500">Loading inquiries...</div>
+            ) : (
+              <div className="space-y-4">
+                {(() => {
+                  const allInquiries: (InquiryRow & { source: 'lender' | 'vendor' })[] = [
+                    ...(inquiryFilter !== 'vendor'
+                      ? lenderInquiries.map((i) => ({ ...i, source: 'lender' as const }))
+                      : []),
+                    ...(inquiryFilter !== 'lender'
+                      ? vendorInquiries.map((i) => ({ ...i, source: 'vendor' as const }))
+                      : []),
+                  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+                  if (allInquiries.length === 0) {
+                    return (
+                      <Card className="border-2 border-dashed">
+                        <CardContent className="p-12 text-center">
+                          <Inbox className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2">No inquiries yet</h3>
+                          <p className="text-gray-600">Inquiries from lender and vendor forms will appear here.</p>
+                        </CardContent>
+                      </Card>
+                    );
+                  }
+
+                  return allInquiries.map((inquiry) => (
+                    <Card key={`${inquiry.source}-${inquiry.id}`} className="border border-slate-200">
+                      <CardContent className="p-5">
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-1">
+                              <h3 className="text-base font-semibold text-gray-900">
+                                {inquiry.first_name} {inquiry.last_name}
+                              </h3>
+                              <Badge
+                                variant={inquiry.source === 'lender' ? 'default' : 'secondary'}
+                                className="text-xs"
+                              >
+                                {inquiry.source === 'lender' ? (
+                                  <Building2 className="h-3 w-3 mr-1" />
+                                ) : (
+                                  <Wrench className="h-3 w-3 mr-1" />
+                                )}
+                                {inquiry.source === 'lender' ? 'Lender' : 'Vendor'}
+                              </Badge>
+                              <InquiryStatusBadge status={inquiry.status} />
+                            </div>
+                            <p className="text-sm text-gray-600 mb-1">
+                              <span className="font-medium">{inquiry.company}</span>
+                              {inquiry.source === 'lender' && inquiry.lender_type && (
+                                <> · <span className="capitalize">{inquiry.lender_type.replace(/_/g, ' ')}</span></>
+                              )}
+                              {inquiry.source === 'vendor' && inquiry.service_type && (
+                                <> · <span className="capitalize">{inquiry.service_type.replace(/_/g, ' ')}</span></>
+                              )}
+                            </p>
+                            <p className="text-sm text-gray-500 flex items-center gap-3">
+                              <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{inquiry.email}</span>
+                              {inquiry.phone && <span>{inquiry.phone}</span>}
+                            </p>
+                            {inquiry.message && (
+                              <p className="mt-2 text-sm text-gray-600 bg-gray-50 rounded-lg p-3 border">
+                                {inquiry.message}
+                              </p>
+                            )}
+                            <p className="mt-2 text-xs text-gray-400">
+                              <Clock className="h-3 w-3 inline mr-1" />
+                              {new Date(inquiry.created_at).toLocaleDateString('en-US', {
+                                year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                              })}
+                            </p>
+                          </div>
+                          <div className="shrink-0">
+                            <Select
+                              value={inquiry.status}
+                              onValueChange={(value) =>
+                                updateInquiryStatus(
+                                  inquiry.source === 'lender' ? 'lender_inquiries' : 'vendor_inquiries',
+                                  inquiry.id,
+                                  value
+                                )
+                              }
+                            >
+                              <SelectTrigger className="w-[140px] h-9 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="new">New</SelectItem>
+                                <SelectItem value="contacted">Contacted</SelectItem>
+                                <SelectItem value="approved">Approved</SelectItem>
+                                <SelectItem value="declined">Declined</SelectItem>
+                                <SelectItem value="archived">Archived</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ));
+                })()}
+              </div>
+            )}
+          </div>
+        ) : (
+          /* ── Partners Tab ──────────────────────────────────── */
+          <div>
+            {/* Filter tabs */}
+            <div className="flex gap-2 mb-6">
           {[
             { key: 'all' as const, label: 'All' },
             { key: 'lender' as const, label: 'Lenders' },
@@ -403,8 +631,28 @@ export default function AdminPartnersPage() {
             ))}
           </div>
         )}
+          </div>
+        )}
       </div>
     </div>
+  );
+}
+
+/* ── Inquiry Status Badge helper ──────────────────────────────────── */
+function InquiryStatusBadge({ status }: { status: string }) {
+  const map: Record<string, { label: string; className: string }> = {
+    new: { label: 'New', className: 'bg-blue-100 text-blue-800' },
+    contacted: { label: 'Contacted', className: 'bg-yellow-100 text-yellow-800' },
+    approved: { label: 'Approved', className: 'bg-green-100 text-green-800' },
+    declined: { label: 'Declined', className: 'bg-red-100 text-red-800' },
+    archived: { label: 'Archived', className: 'bg-gray-100 text-gray-600' },
+  };
+  const info = map[status] || { label: status, className: 'bg-gray-100 text-gray-600' };
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold ${info.className}`}>
+      {status === 'new' && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1" />}
+      {info.label}
+    </span>
   );
 }
 

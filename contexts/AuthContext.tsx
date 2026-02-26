@@ -98,14 +98,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (data.user) {
       try {
-        await supabase.from('profiles').insert({
-          id: data.user.id,
-          email,
-          full_name: fullName,
-          role: data.user.user_metadata.role,
+        const res = await fetch('/api/auth/create-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: data.user.id,
+            email,
+            full_name: fullName,
+            role,
+          }),
         });
-      } catch (error) {
-        console.error('Error inserting profile:', error);
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          console.error('Error creating profile:', body);
+        }
+      } catch (err) {
+        console.error('Error creating profile:', err);
       }
     }
 
