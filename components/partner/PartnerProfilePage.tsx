@@ -88,6 +88,7 @@ export type PartnerProfile = {
   states_served: string[] | null;
   service_type: string | null;
   service_areas: string | null;
+  contact_picture_url: string | null;
   video_url: string | null;
   documents: { name: string; url: string; description?: string }[];
   highlights: { icon: string; label: string }[];
@@ -162,6 +163,14 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
                   src={partner.logo_url}
                   alt={partner.company_name}
                   className="w-full h-full object-contain p-2"
+                />
+              </div>
+            ) : partner.contact_picture_url ? (
+              <div className="flex-shrink-0 w-24 h-24 rounded-full overflow-hidden border-2 border-white/20">
+                <img
+                  src={partner.contact_picture_url}
+                  alt={partner.contact_name || partner.company_name}
+                  className="w-full h-full object-cover"
                 />
               </div>
             ) : (
@@ -394,7 +403,17 @@ export function PartnerProfilePage({ partner }: { partner: PartnerProfile }) {
               <div className="space-y-4">
                 {partner.contact_name && (
                   <div className="flex items-center gap-3 text-gray-700">
-                    <Users className="h-5 w-5 text-primary" />
+                    {partner.contact_picture_url ? (
+                      <div className="w-10 h-10 rounded-full overflow-hidden border border-slate-200 flex-shrink-0">
+                        <img
+                          src={partner.contact_picture_url}
+                          alt={partner.contact_name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <Users className="h-5 w-5 text-primary" />
+                    )}
                     <span>{partner.contact_name}</span>
                   </div>
                 )}

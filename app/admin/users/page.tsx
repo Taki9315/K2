@@ -85,29 +85,43 @@ export default function UsersPage() {
     data: { id?: string; name: string; email: string; role: string; status: string; preferred: boolean }
   ) => {
     try {
+      const isNew = !data.id;
       const res = await fetch("/api/admin/users", {
-        method: "PATCH",
+        method: isNew ? "POST" : "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: data.id,
-          full_name: data.name,
-          email: data.email,
-          role: data.role,
-          status: data.status,
-          preferred: data.preferred,
-        }),
+        body: JSON.stringify(
+          isNew
+            ? {
+                name: data.name,
+                email: data.email,
+                role: data.role,
+                status: data.status,
+                preferred: data.preferred,
+              }
+            : {
+                id: data.id,
+                full_name: data.name,
+                email: data.email,
+                role: data.role,
+                status: data.status,
+                preferred: data.preferred,
+              }
+        ),
       });
 
-      if (!res.ok) throw new Error("Failed to update user");
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || (isNew ? "Failed to create user" : "Failed to update user"));
+      }
 
       toast({
-        title: "User updated",
-        description: `${data.name} has been updated.`,
+        title: isNew ? "User created" : "User updated",
+        description: `${data.name || data.email} has been ${isNew ? "created" : "updated"}.`,
       });
       fetchUsers();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Save user error:", err);
-      toast({ title: "Error", description: "Failed to save user." });
+      toast({ title: "Error", description: err.message || "Failed to save user." });
     }
   };
 

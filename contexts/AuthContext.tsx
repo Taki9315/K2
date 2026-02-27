@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
 
@@ -24,58 +24,75 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasMembership, setHasMembership] = useState(false);
+  // Guard against double-init in StrictMode / fast remounts
+  const initRef = useRef(false);
 
-  const checkMembership = async () => {
-    if (!user) {
+  const checkMembership = useCallback(async (uid?: string) => {
+    const userId = uid;
+    if (!userId) {
       setHasMembership(false);
       return;
     }
 
-    const { data, error } = await supabase
-      .from('memberships')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('memberships')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .maybeSingle();
 
-    setHasMembership(!!data && !error);
-  };
+      setHasMembership(!!data && !error);
+    } catch {
+      setHasMembership(false);
+    }
+  }, []);
 
+  // Initialize auth — runs once
   useEffect(() => {
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
-    })();
+    if (initRef.current) return;
+    initRef.current = true;
 
+    let mounted = true;
+
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!mounted) return;
+      const u = session?.user ?? null;
+      setUser(u);
+      setLoading(false);
+      if (u) checkMembership(u.id);
+    });
+
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        (async () => {
-          setUser(session?.user ?? null);
-        })();
+        if (!mounted) return;
+        const u = session?.user ?? null;
+        setUser(u);
+        if (u) {
+          checkMembership(u.id);
+        } else {
+          setHasMembership(false);
+        }
       }
     );
 
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [checkMembership]);
 
-  useEffect(() => {
-    (async () => {
-      if (user) {
-        await checkMembership();
-      }
-    })();
-  }, [user]);
-
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) throw error;
-  };
+  }, []);
 
-  const signUp = async (
+  const signUp = useCallback(async (
     email: string,
     password: string,
     fullName: string
@@ -116,11 +133,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error creating profile:', err);
       }
     }
-  };
+  }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -131,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signUp,
         signOut,
         hasMembership,
-        checkMembership,
+        checkMembership: () => checkMembership(user?.id),
       }}
     >
       {children}

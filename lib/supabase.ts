@@ -1,9 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/ssr';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Modern @supabase/ssr browser client – avoids Proxy/Reflect recursion
+// that the old createClient pattern causes in Next.js App Router 2025+.
+export const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export type Database = {
   public: {

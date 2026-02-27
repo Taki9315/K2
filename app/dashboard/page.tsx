@@ -20,6 +20,8 @@ import {
   BarChart3,
   Phone,
   Compass,
+  Handshake,
+  Building2,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -278,6 +280,41 @@ export default function DashboardPage() {
 
               <Card>
                 <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Handshake className="h-5 w-5 text-primary" />
+                    K2 Partner Network
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Browse our vetted preferred lenders and trusted vendors for your
+                    commercial real estate needs.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <Button variant="outline" size="sm" asChild className="justify-start gap-2 h-auto py-2.5">
+                      <Link href="/dashboard/resources?filter=lender">
+                        <Building2 className="h-4 w-4 text-primary flex-shrink-0" />
+                        <span className="text-sm">Preferred Lenders</span>
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="sm" asChild className="justify-start gap-2 h-auto py-2.5">
+                      <Link href="/dashboard/resources?filter=vendor">
+                        <ShoppingBag className="h-4 w-4 text-primary flex-shrink-0" />
+                        <span className="text-sm">Trusted Vendors</span>
+                      </Link>
+                    </Button>
+                  </div>
+                  <Button variant="link" size="sm" asChild className="mt-3 px-0">
+                    <Link href="/dashboard/resources">
+                      View all partners
+                      <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
                   <CardTitle>Recent Content</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -370,6 +407,12 @@ export default function DashboardPage() {
                   <CardTitle>Quick Links</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/dashboard/resources">
+                      <Handshake className="mr-2 h-4 w-4" />
+                      Partner Resources
+                    </Link>
+                  </Button>
                   <Button variant="outline" className="w-full" asChild>
                     <Link href="/content">Browse Content</Link>
                   </Button>

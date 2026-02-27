@@ -26,6 +26,89 @@ export async function GET() {
   }
 }
 
+// POST /api/admin/users – create a new user (auth + profile)
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { name, email, role, status, preferred, password } = body;
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Missing required field: email" },
+        { status: 400 }
+      );
+    }
+
+    const supabase = createServiceRoleClient();
+
+    // 1. Create the auth user with default password "123456"
+    //    (triggers the handle_new_user trigger which auto-creates a profiles row)
+    const { data: authData, error: authError } =
+      await supabase.auth.admin.createUser({
+        email,
+        password: password || "123456",
+        email_confirm: false,
+        user_metadata: {
+          full_name: name || "",
+          role: role || "borrower",
+        },
+      });
+
+    if (authError) {
+      console.error("Create auth user error:", authError);
+      return NextResponse.json(
+        { error: authError.message },
+        { status: 400 }
+      );
+    }
+
+    const userId = authData.user.id;
+
+    // 2. Send a confirmation / invite email so the user can verify
+    const { error: inviteError } =
+      await supabase.auth.admin.inviteUserByEmail(email);
+    if (inviteError) {
+      console.error("Invite email error:", inviteError);
+      // Non-fatal – user was created, admin can resend later
+    }
+
+    // 2. Update the auto-created profile with additional fields
+    const profileUpdates: Record<string, unknown> = {};
+    if (name) profileUpdates.full_name = name;
+    if (role) profileUpdates.role = role;
+    if (status) profileUpdates.status = status;
+    if (typeof preferred === "boolean") profileUpdates.preferred = preferred;
+
+    if (Object.keys(profileUpdates).length > 0) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update(profileUpdates)
+        .eq("id", userId);
+
+      if (profileError) {
+        console.error("Update new user profile error:", profileError);
+        // User was created in auth but profile update failed – still return success
+        // so admin can fix the profile later
+      }
+    }
+
+    // 3. Return the full profile
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    return NextResponse.json(profile, { status: 201 });
+  } catch (err) {
+    console.error("Admin users POST error:", err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
 // PATCH /api/admin/users – update a user profile
 export async function PATCH(request: Request) {
   try {

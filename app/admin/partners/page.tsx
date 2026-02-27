@@ -38,6 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { FileUpload } from '@/components/admin/FileUpload';
 
 type InquiryRow = {
   id: string;
@@ -77,6 +78,7 @@ type PartnerRow = {
   states_served: string[] | null;
   service_type: string | null;
   service_areas: string | null;
+  contact_picture_url: string | null;
   video_url: string | null;
   documents: { name: string; url: string; description?: string }[];
   highlights: { icon: string; label: string }[];
@@ -147,6 +149,8 @@ export default function AdminPartnersPage() {
   const [inquiryFilter, setInquiryFilter] = useState<'all' | 'lender' | 'vendor'>('all');
   const [inquiriesLoading, setInquiriesLoading] = useState(false);
 
+  const [tableError, setTableError] = useState(false);
+
   const checkAdmin = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase
@@ -168,6 +172,11 @@ export default function AdminPartnersPage() {
       .order('partner_type', { ascending: true })
       .order('company_name', { ascending: true });
 
+    if (error && error.message.includes('does not exist')) {
+      setTableError(true);
+      setLoading(false);
+      return;
+    }
     if (!error && data) {
       setPartners(data as PartnerRow[]);
     }
@@ -250,6 +259,53 @@ export default function AdminPartnersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
+  if (tableError) {
+    const projectRef = process.env.NEXT_PUBLIC_SUPABASE_URL?.match(/https:\/\/([^.]+)\./)?.[1] || 'your-project';
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <div className="max-w-3xl mx-auto px-4 py-16">
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription className="text-base">
+              <strong>Database Setup Required</strong>
+              <br />
+              The <code className="font-mono bg-red-100 px-1 rounded">partner_profiles</code> table
+              does not exist yet. You need to run the migration SQL in the Supabase SQL Editor.
+            </AlertDescription>
+          </Alert>
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <h2 className="text-xl font-bold text-gray-900">How to fix this:</h2>
+              <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                <li>
+                  Open the{' '}
+                  <a
+                    href={`https://supabase.com/dashboard/project/${projectRef}/sql/new`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline font-medium"
+                  >
+                    Supabase SQL Editor
+                  </a>
+                </li>
+                <li>
+                  Copy the contents of{' '}
+                  <code className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-sm">
+                    supabase/migrations/COMBINED_partner_setup.sql
+                  </code>
+                </li>
+                <li>Paste it into the SQL Editor and click <strong>Run</strong></li>
+                <li>Come back here and refresh the page</li>
+              </ol>
+              <Button onClick={() => window.location.reload()} variant="outline" className="mt-4">
+                Refresh Page
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -677,6 +733,7 @@ function PartnerForm({
     slug: partner?.slug || '',
     company_name: partner?.company_name || '',
     logo_url: partner?.logo_url || '',
+    contact_picture_url: partner?.contact_picture_url || '',
     tagline: partner?.tagline || '',
     description: partner?.description || '',
     contact_name: partner?.contact_name || '',
@@ -730,6 +787,7 @@ function PartnerForm({
         slug: form.slug,
         company_name: form.company_name,
         logo_url: form.logo_url || null,
+        contact_picture_url: form.contact_picture_url || null,
         tagline: form.tagline || null,
         description: form.description || null,
         contact_name: form.contact_name || null,
@@ -863,17 +921,29 @@ function PartnerForm({
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="logo_url">Logo URL</Label>
-                  <Input
-                    id="logo_url"
-                    type="url"
-                    placeholder="https://..."
+                  <Label>Company Logo</Label>
+                  <FileUpload
                     value={form.logo_url}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, logo_url: e.target.value }))
-                    }
+                    onChange={(url) => setForm((p) => ({ ...p, logo_url: url }))}
+                    folder="logos"
+                    accept="image/*"
+                    label="Upload company logo"
+                    preview
                   />
                 </div>
+              </div>
+
+              {/* Contact picture */}
+              <div className="space-y-1.5">
+                <Label>Contact Picture / Headshot</Label>
+                <FileUpload
+                  value={form.contact_picture_url}
+                  onChange={(url) => setForm((p) => ({ ...p, contact_picture_url: url }))}
+                  folder="pictures"
+                  accept="image/*"
+                  label="Upload contact headshot"
+                  preview
+                />
               </div>
 
               <div className="space-y-1.5">
@@ -1182,51 +1252,54 @@ function PartnerForm({
                 {documents.map((doc, i) => (
                   <div
                     key={i}
-                    className="grid grid-cols-12 gap-2 mb-2 items-start"
+                    className="rounded-lg border border-border bg-muted/30 p-3 mb-3 space-y-2"
                   >
-                    <Input
-                      className="col-span-3"
-                      placeholder="Document name"
-                      value={doc.name}
-                      onChange={(e) => {
-                        const updated = [...documents];
-                        updated[i] = { ...doc, name: e.target.value };
-                        setDocuments(updated);
-                      }}
-                    />
-                    <Input
-                      className="col-span-4"
-                      placeholder="URL"
-                      value={doc.url}
-                      onChange={(e) => {
-                        const updated = [...documents];
-                        updated[i] = { ...doc, url: e.target.value };
-                        setDocuments(updated);
-                      }}
-                    />
-                    <Input
-                      className="col-span-4"
-                      placeholder="Description (optional)"
-                      value={doc.description}
-                      onChange={(e) => {
-                        const updated = [...documents];
-                        updated[i] = { ...doc, description: e.target.value };
-                        setDocuments(updated);
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="col-span-1"
-                      onClick={() =>
-                        setDocuments((prev) =>
-                          prev.filter((_, idx) => idx !== i)
+                    <div className="grid grid-cols-12 gap-2 items-start">
+                      <Input
+                        className="col-span-5"
+                        placeholder="Document name"
+                        value={doc.name}
+                        onChange={(e) => {
+                          const updated = [...documents];
+                          updated[i] = { ...doc, name: e.target.value };
+                          setDocuments(updated);
+                        }}
+                      />
+                      <Input
+                        className="col-span-6"
+                        placeholder="Description (optional)"
+                        value={doc.description}
+                        onChange={(e) => {
+                          const updated = [...documents];
+                          updated[i] = { ...doc, description: e.target.value };
+                          setDocuments(updated);
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="col-span-1"
+                        onClick={() =>
+                          setDocuments((prev) =>
+                            prev.filter((_, idx) => idx !== i)
                         )
                       }
                     >
                       <X className="h-4 w-4 text-red-500" />
                     </Button>
+                  </div>
+                    <FileUpload
+                      value={doc.url}
+                      onChange={(url) => {
+                        const updated = [...documents];
+                        updated[i] = { ...doc, url };
+                        setDocuments(updated);
+                      }}
+                      folder="documents"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,image/*"
+                      label="Upload PDF or document"
+                    />
                   </div>
                 ))}
               </div>
